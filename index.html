@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Erfurt Pizza - Die beste Pizza in Erfurt! Bestellen Sie Pizza, Burger, indische Spezialitäten und mehr. Lieferservice & Catering in Erfurt.">
+    <meta name="keywords" content="Pizza Erfurt, Pizza bestellen, Lieferservice Erfurt, Burger Erfurt, Indische Spezialitäten">
+    <title>Erfurt Pizza - Beste Pizza, Burger & Indische Spezialitäten | Lieferservice Erfurt</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <div class="nav__logo">
+                <i class="fas fa-pizza-slice"></i>
+                <span>Erfurt Pizza</span>
+            </div>
+
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="#home" class="nav__link active-link">Home</a></li>
+                    <li class="nav__item"><a href="#about" class="nav__link">Über Uns</a></li>
+                    <li class="nav__item"><a href="#menu" class="nav__link">Speisekarte</a></li>
+                    <li class="nav__item"><a href="#specials" class="nav__link">Angebote</a></li>
+                    <li class="nav__item"><a href="#contact" class="nav__link">Kontakt</a></li>
+                </ul>
+                <div class="nav__close" id="nav-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+
+            <div class="nav__actions">
+                <button class="nav__cart" id="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
+                <div class="nav__toggle" id="nav-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero__container container">
+            <div class="hero__content">
+                <span class="hero__subtitle">Willkommen bei</span>
+                <h1 class="hero__title">Erfurt Pizza</h1>
+                <p class="hero__description">
+                    Authentische Pizza, saftige Burger und köstliche indische Spezialitäten -
+                    frisch zubereitet und direkt zu Ihnen nach Hause geliefert!
+                </p>
+                <div class="hero__buttons">
+                    <a href="#menu" class="btn btn-primary">
+                        <i class="fas fa-utensils"></i> Jetzt bestellen
+                    </a>
+                    <a href="tel:036165442275" class="btn btn-secondary">
+                        <i class="fas fa-phone"></i> 0361 65 44 22 75
+                    </a>
+                </div>
+                <div class="hero__features">
+                    <div class="feature">
+                        <i class="fas fa-shipping-fast"></i>
+                        <span>Schnelle Lieferung</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-percent"></i>
+                        <span>20% Rabatt Abholung</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-star"></i>
+                        <span>Frisch zubereitet</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero__image">
+                <div class="hero__image-bg"></div>
+                <img src="assets/hero-pizza.png" alt="Delicious Pizza" class="hero__img">
+            </div>
+        </div>
+        <div class="hero__scroll">
+            <a href="#about" class="hero__scroll-button">
+                <i class="fas fa-mouse"></i>
+                <span>Scroll Down</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about section" id="about">
+        <div class="about__container container grid">
+            <div class="about__data">
+                <span class="section__subtitle">Unsere Geschichte</span>
+                <h2 class="section__title">Über Erfurt Pizza</h2>
+                <p class="about__description">
+                    Bei Erfurt Pizza verbinden wir Tradition mit Innovation. Unsere Küche bietet eine
+                    einzigartige Fusion aus italienischer Pizza-Kunst und authentischen indischen Spezialitäten.
+                    Jedes Gericht wird mit Liebe und frischen Zutaten zubereitet.
+                </p>
+                <p class="about__description">
+                    Ob Sie sich für eine klassische Pizza, einen saftigen Burger oder exotische indische
+                    Gerichte entscheiden - bei uns finden Sie für jeden Geschmack das Richtige!
+                </p>
+                <div class="about__info">
+                    <div class="about__info-item">
+                        <i class="fas fa-award"></i>
+                        <div>
+                            <h3>Premium Qualität</h3>
+                            <p>Nur die besten Zutaten</p>
+                        </div>
+                    </div>
+                    <div class="about__info-item">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h3>Erfahrenes Team</h3>
+                            <p>Professionelle Köche</p>
+                        </div>
+                    </div>
+                    <div class="about__info-item">
+                        <i class="fas fa-leaf"></i>
+                        <div>
+                            <h3>Frische Zutaten</h3>
+                            <p>Täglich frisch</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about__img">
+                <img src="assets/about-img.jpg" alt="Restaurant Interior">
+            </div>
+        </div>
+    </section>
+
+    <!-- Specials Section -->
+    <section class="specials section" id="specials">
+        <div class="specials__container container">
+            <span class="section__subtitle">Besondere Angebote</span>
+            <h2 class="section__title">Unsere Specials</h2>
+
+            <div class="specials__grid">
+                <div class="special-card">
+                    <div class="special-card__badge">20% OFF</div>
+                    <i class="fas fa-box special-card__icon"></i>
+                    <h3>Abholung</h3>
+                    <p>20% Rabatt bei Selbstabholung</p>
+                    <span class="special-card__note">Code nicht erforderlich</span>
+                </div>
+
+                <div class="special-card">
+                    <div class="special-card__badge">HOT</div>
+                    <i class="fas fa-fire special-card__icon"></i>
+                    <h3>Extra Scharf</h3>
+                    <p>Alle Gerichte auf Wunsch scharf!</p>
+                    <span class="special-card__note">Einfach bei Bestellung angeben</span>
+                </div>
+
+                <div class="special-card">
+                    <div class="special-card__badge">+2.50€</div>
+                    <i class="fas fa-bread-slice special-card__icon"></i>
+                    <h3>Extra Naanbrot</h3>
+                    <p>Perfekt zu indischen Gerichten</p>
+                    <span class="special-card__note">Frisch aus dem Tandoor</span>
+                </div>
+
+                <div class="special-card">
+                    <i class="fas fa-utensils special-card__icon"></i>
+                    <h3>Alle Gerichte mit Reis</h3>
+                    <p>Indische Spezialitäten inklusive Reis</p>
+                    <span class="special-card__note">Premium Basmati</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu section" id="menu">
+        <div class="menu__container container">
+            <span class="section__subtitle">Unsere Speisekarte</span>
+            <h2 class="section__title">Was darf es sein?</h2>
+
+            <!-- Menu Filter -->
+            <div class="menu__filters">
+                <button class="menu__filter active-filter" data-filter="all">
+                    <i class="fas fa-th"></i> Alle
+                </button>
+                <button class="menu__filter" data-filter="pizza">
+                    <i class="fas fa-pizza-slice"></i> Pizza
+                </button>
+                <button class="menu__filter" data-filter="burger">
+                    <i class="fas fa-hamburger"></i> Burger
+                </button>
+                <button class="menu__filter" data-filter="indian">
+                    <i class="fas fa-pepper-hot"></i> Indisch
+                </button>
+                <button class="menu__filter" data-filter="salad">
+                    <i class="fas fa-salad"></i> Salate
+                </button>
+                <button class="menu__filter" data-filter="vegetarian">
+                    <i class="fas fa-leaf"></i> Vegetarisch
+                </button>
+                <button class="menu__filter" data-filter="schnitzel">
+                    <i class="fas fa-drumstick-bite"></i> Schnitzel
+                </button>
+            </div>
+
+            <!-- Menu Items Grid -->
+            <div class="menu__content grid" id="menu-items">
+                <!-- Menu items will be loaded dynamically via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact section" id="contact">
+        <div class="contact__container container grid">
+            <div class="contact__data">
+                <span class="section__subtitle">Kontaktieren Sie uns</span>
+                <h2 class="section__title">Bestellen oder Besuchen</h2>
+
+                <div class="contact__info">
+                    <div class="contact__card">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h3>Telefon</h3>
+                            <p><a href="tel:036165442275">0361 65 44 22 75</a></p>
+                            <p><a href="tel:036173107656">0361 73 10 76 56</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact__card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>Adresse</h3>
+                            <p>An der Lache 41</p>
+                            <p>99086 Erfurt</p>
+                        </div>
+                    </div>
+
+                    <div class="contact__card">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3>Öffnungszeiten</h3>
+                            <p>Mo - Fr: 16:30 - 22:30 Uhr</p>
+                            <p>Sa - So: 14:45 - 22:30 Uhr</p>
+                        </div>
+                    </div>
+
+                    <div class="contact__card">
+                        <i class="fas fa-truck"></i>
+                        <div>
+                            <h3>Lieferung</h3>
+                            <p>Mo - Fr: 17:00 - 22:00 Uhr</p>
+                            <p>Sa - So: 15:00 - 22:00 Uhr</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact__map">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2499.8!2d11.0!3d50.98!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTDCsDU4JzQ4LjAiTiAxMcKwMDAnMDAuMCJF!5e0!3m2!1sde!2sde!4v1234567890!5m2!1sde!2sde"
+                    width="100%"
+                    height="450"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <a href="https://maps.app.goo.gl/4umnw7fZx1AQwzx79" class="map__link" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> In Google Maps öffnen
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__container container grid">
+            <div class="footer__content">
+                <div class="footer__logo">
+                    <i class="fas fa-pizza-slice"></i>
+                    <span>Erfurt Pizza</span>
+                </div>
+                <p class="footer__description">
+                    Ihre erste Adresse für Pizza, Burger und indische Spezialitäten in Erfurt.
+                </p>
+                <div class="footer__social">
+                    <a href="#" class="footer__social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="footer__social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="footer__social-link"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div class="footer__content">
+                <h3 class="footer__title">Schnelllinks</h3>
+                <ul class="footer__links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">Über Uns</a></li>
+                    <li><a href="#menu">Speisekarte</a></li>
+                    <li><a href="#contact">Kontakt</a></li>
+                </ul>
+            </div>
+
+            <div class="footer__content">
+                <h3 class="footer__title">Kontakt</h3>
+                <ul class="footer__links">
+                    <li><i class="fas fa-phone"></i> 0361 65 44 22 75</li>
+                    <li><i class="fas fa-phone"></i> 0361 73 10 76 56</li>
+                    <li><i class="fas fa-map-marker-alt"></i> An der Lache 41, 99086 Erfurt</li>
+                </ul>
+            </div>
+
+            <div class="footer__content">
+                <h3 class="footer__title">Öffnungszeiten</h3>
+                <ul class="footer__links">
+                    <li>Mo - Fr: 16:30 - 22:30</li>
+                    <li>Sa - So: 14:45 - 22:30</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer__bottom">
+            <p>&copy; 2024 Erfurt Pizza. Alle Rechte vorbehalten.</p>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Modal -->
+    <div class="cart-modal" id="cart-modal">
+        <div class="cart-modal__content">
+            <div class="cart-modal__header">
+                <h2><i class="fas fa-shopping-cart"></i> Ihr Warenkorb</h2>
+                <button class="cart-modal__close" id="cart-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="cart-modal__items" id="cart-items">
+                <!-- Cart items will be loaded here -->
+            </div>
+
+            <div class="cart-modal__empty" id="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Ihr Warenkorb ist leer</p>
+                <a href="#menu" class="btn btn-primary">Zur Speisekarte</a>
+            </div>
+
+            <div class="cart-modal__footer" id="cart-footer">
+                <div class="cart-modal__summary">
+                    <div class="cart-summary__item">
+                        <span>Zwischensumme:</span>
+                        <span id="cart-subtotal">0,00 €</span>
+                    </div>
+                    <div class="cart-summary__item">
+                        <span>Liefergebühr:</span>
+                        <span id="cart-delivery">2,00 €</span>
+                    </div>
+                    <div class="cart-summary__item cart-summary__total">
+                        <span>Gesamt:</span>
+                        <span id="cart-total">0,00 €</span>
+                    </div>
+                </div>
+
+                <div class="cart-modal__delivery-options">
+                    <label class="delivery-option">
+                        <input type="radio" name="delivery" value="delivery" checked>
+                        <span><i class="fas fa-truck"></i> Lieferung (+2,00 €)</span>
+                    </label>
+                    <label class="delivery-option">
+                        <input type="radio" name="delivery" value="pickup">
+                        <span><i class="fas fa-box"></i> Abholung (20% Rabatt)</span>
+                    </label>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="checkout-btn">
+                    <i class="fas fa-credit-card"></i> Zur Kasse
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="checkout-modal" id="checkout-modal">
+        <div class="checkout-modal__content">
+            <div class="checkout-modal__header">
+                <h2><i class="fas fa-clipboard-list"></i> Bestellung aufgeben</h2>
+                <button class="checkout-modal__close" id="checkout-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form class="checkout-form" id="checkout-form">
+                <div class="checkout-section">
+                    <h3><i class="fas fa-user"></i> Ihre Daten</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="customer-name">Name *</label>
+                            <input type="text" id="customer-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-phone">Telefon *</label>
+                            <input type="tel" id="customer-phone" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="customer-email">E-Mail</label>
+                            <input type="email" id="customer-email">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-section" id="delivery-address-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> Lieferadresse</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="customer-street">Straße und Hausnummer *</label>
+                            <input type="text" id="customer-street" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-zip">PLZ *</label>
+                            <input type="text" id="customer-zip" value="99086" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-city">Stadt *</label>
+                            <input type="text" id="customer-city" value="Erfurt" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-section">
+                    <h3><i class="fas fa-credit-card"></i> Zahlungsmethode</h3>
+                    <div class="payment-methods">
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="cash" checked>
+                            <span>
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <strong>Barzahlung</strong>
+                                    <small>Bei Lieferung oder Abholung</small>
+                                </div>
+                            </span>
+                        </label>
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="paypal">
+                            <span>
+                                <i class="fab fa-paypal"></i>
+                                <div>
+                                    <strong>PayPal</strong>
+                                    <small>Sicher online bezahlen</small>
+                                </div>
+                            </span>
+                        </label>
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="card">
+                            <span>
+                                <i class="fas fa-credit-card"></i>
+                                <div>
+                                    <strong>Kreditkarte</strong>
+                                    <small>Visa, Mastercard</small>
+                                </div>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="checkout-section">
+                    <h3><i class="fas fa-comment"></i> Anmerkungen</h3>
+                    <div class="form-group">
+                        <textarea id="customer-notes" rows="3" placeholder="Besondere Wünsche, Allergien, Klingelname, etc."></textarea>
+                    </div>
+                </div>
+
+                <div class="checkout-summary">
+                    <h3>Bestellübersicht</h3>
+                    <div id="checkout-items"></div>
+                    <div class="checkout-total">
+                        <span>Gesamtbetrag:</span>
+                        <span id="checkout-total">0,00 €</span>
+                    </div>
+                </div>
+
+                <div class="checkout-actions">
+                    <button type="button" class="btn btn-secondary" id="back-to-cart">
+                        <i class="fas fa-arrow-left"></i> Zurück
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Bestellung abschicken
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div class="confirmation-modal" id="confirmation-modal">
+        <div class="confirmation-modal__content">
+            <div class="confirmation-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Vielen Dank für Ihre Bestellung!</h2>
+            <p>Ihre Bestellung wurde erfolgreich aufgenommen.</p>
+            <div class="confirmation-details" id="confirmation-details">
+                <!-- Order details will be shown here -->
+            </div>
+            <p class="confirmation-note">
+                Sie erhalten in Kürze eine Bestätigung. Bei Fragen rufen Sie uns gerne an:
+                <strong><a href="tel:036165442275">0361 65 44 22 75</a></strong>
+            </p>
+            <button class="btn btn-primary" id="confirmation-close">
+                <i class="fas fa-home"></i> Zurück zur Startseite
+            </button>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scrolltop" id="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="menu-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

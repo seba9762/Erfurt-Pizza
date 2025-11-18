@@ -1,0 +1,35 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3f3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fff5f0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="400" fill="url(#grad)"/>
+
+  <!-- Pizza icon -->
+  <g transform="translate(300, 200)">
+    <!-- Pizza circle -->
+    <circle cx="0" cy="0" r="80" fill="#dc2626" opacity="0.2"/>
+
+    <!-- Pizza slice -->
+    <path d="M 0,-60 L -50,50 A 60,60 0 0,0 50,50 Z" fill="#dc2626" opacity="0.3"/>
+
+    <!-- Toppings -->
+    <circle cx="-15" cy="-10" r="8" fill="#f97316" opacity="0.5"/>
+    <circle cx="20" cy="5" r="8" fill="#f97316" opacity="0.5"/>
+    <circle cx="-5" cy="20" r="8" fill="#f97316" opacity="0.5"/>
+    <circle cx="15" cy="-25" r="8" fill="#f97316" opacity="0.5"/>
+  </g>
+
+  <!-- Text -->
+  <text x="300" y="320" font-family="Arial, sans-serif" font-size="24" fill="#dc2626" text-anchor="middle" font-weight="bold">
+    Erfurt Pizza
+  </text>
+  <text x="300" y="350" font-family="Arial, sans-serif" font-size="16" fill="#6b7280" text-anchor="middle">
+    Bild wird geladen...
+  </text>
+</svg>
