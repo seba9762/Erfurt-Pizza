@@ -1,0 +1,131 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff5f0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fef3f3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="tableGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b4513;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGrad)"/>
+
+  <!-- Table -->
+  <rect x="0" y="350" width="800" height="250" fill="url(#tableGrad)"/>
+  <rect x="0" y="350" width="800" height="15" fill="#654321" opacity="0.5"/>
+
+  <!-- Pizza on table -->
+  <g transform="translate(250, 400)">
+    <!-- Plate shadow -->
+    <ellipse cx="0" cy="80" rx="130" ry="20" fill="#000" opacity="0.15"/>
+
+    <!-- Plate -->
+    <circle cx="0" cy="0" r="120" fill="#f5f5f5" stroke="#ddd" stroke-width="3"/>
+    <circle cx="0" cy="0" r="115" fill="none" stroke="#e0e0e0" stroke-width="2"/>
+
+    <!-- Pizza -->
+    <circle cx="0" cy="0" r="95" fill="#ffd700"/>
+
+    <!-- Sauce -->
+    <circle cx="0" cy="0" r="90" fill="#dc2626" opacity="0.7"/>
+
+    <!-- Cheese -->
+    <circle cx="0" cy="0" r="85" fill="#ffd700" opacity="0.9"/>
+
+    <!-- Toppings -->
+    <circle cx="-30" cy="-30" r="10" fill="#c41e3a"/>
+    <circle cx="35" cy="-20" r="10" fill="#c41e3a"/>
+    <circle cx="-40" cy="30" r="10" fill="#c41e3a"/>
+    <circle cx="20" cy="40" r="10" fill="#c41e3a"/>
+    <circle cx="0" cy="-45" r="10" fill="#c41e3a"/>
+
+    <ellipse cx="-20" cy="10" rx="12" ry="8" fill="#228b22" opacity="0.8"/>
+    <ellipse cx="30" cy="15" rx="12" ry="8" fill="#228b22" opacity="0.8"/>
+    <ellipse cx="-35" cy="-10" rx="12" ry="8" fill="#228b22" opacity="0.8"/>
+
+    <ellipse cx="10" cy="-20" rx="14" ry="9" fill="#8b7355"/>
+    <ellipse cx="-15" cy="35" rx="14" ry="9" fill="#8b7355"/>
+    <ellipse cx="40" cy="5" rx="14" ry="9" fill="#8b7355"/>
+
+    <!-- Basil leaves -->
+    <ellipse cx="5" cy="15" rx="8" ry="12" fill="#2d5016" opacity="0.8" transform="rotate(30 5 15)"/>
+    <ellipse cx="-25" cy="-15" rx="8" ry="12" fill="#2d5016" opacity="0.8" transform="rotate(-20 -25 -15)"/>
+  </g>
+
+  <!-- Burger on table -->
+  <g transform="translate(550, 420)">
+    <!-- Plate shadow -->
+    <ellipse cx="0" cy="60" rx="100" ry="15" fill="#000" opacity="0.15"/>
+
+    <!-- Plate -->
+    <ellipse cx="0" cy="0" rx="90" ry="12" fill="#f5f5f5" stroke="#ddd" stroke-width="2"/>
+
+    <!-- Burger -->
+    <!-- Bottom bun -->
+    <ellipse cx="0" cy="0" rx="60" ry="15" fill="#d2691e"/>
+    <ellipse cx="0" cy="-2" rx="60" ry="14" fill="#daa520"/>
+
+    <!-- Patty -->
+    <ellipse cx="0" cy="-18" rx="58" ry="12" fill="#654321"/>
+
+    <!-- Cheese -->
+    <path d="M -58 -18 Q -60 -25 -55 -28 L 55 -28 Q 60 -25 58 -18 Z" fill="#ffd700"/>
+
+    <!-- Lettuce -->
+    <path d="M -55 -28 Q -58 -32 -54 -35 Q -30 -37 0 -36 Q 30 -37 54 -35 Q 58 -32 55 -28 Z" fill="#90ee90"/>
+
+    <!-- Tomato -->
+    <ellipse cx="-25" cy="-36" rx="20" ry="4" fill="#ff6347"/>
+    <ellipse cx="20" cy="-36" rx="20" ry="4" fill="#ff6347"/>
+
+    <!-- Top bun -->
+    <ellipse cx="0" cy="-50" rx="58" ry="20" fill="#d2691e"/>
+    <ellipse cx="0" cy="-52" rx="58" ry="18" fill="#daa520"/>
+
+    <!-- Sesame seeds -->
+    <ellipse cx="-20" cy="-58" rx="2" ry="3" fill="#f5deb3"/>
+    <ellipse cx="-10" cy="-60" rx="2" ry="3" fill="#f5deb3"/>
+    <ellipse cx="5" cy="-59" rx="2" ry="3" fill="#f5deb3"/>
+    <ellipse cx="18" cy="-57" rx="2" ry="3" fill="#f5deb3"/>
+    <ellipse cx="30" cy="-55" rx="2" ry="3" fill="#f5deb3"/>
+    <ellipse cx="-35" cy="-55" rx="2" ry="3" fill="#f5deb3"/>
+  </g>
+
+  <!-- Cooking pot/pan in background -->
+  <g transform="translate(100, 200)" opacity="0.6">
+    <ellipse cx="0" cy="0" rx="60" ry="10" fill="#333"/>
+    <rect x="-60" y="0" width="120" height="80" fill="#444"/>
+    <ellipse cx="0" cy="80" rx="60" ry="10" fill="#2d2d2d"/>
+    <rect x="-70" y="35" width="15" height="8" rx="4" fill="#333"/>
+
+    <!-- Steam -->
+    <path d="M -30 -20 Q -35 -40 -30 -60" stroke="#e0e0e0" stroke-width="2" fill="none" opacity="0.5">
+      <animate attributeName="opacity" values="0.5;0.2;0.5" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 0 -25 Q -5 -45 0 -65" stroke="#e0e0e0" stroke-width="2" fill="none" opacity="0.5">
+      <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 30 -20 Q 25 -40 30 -60" stroke="#e0e0e0" stroke-width="2" fill="none" opacity="0.5">
+      <animate attributeName="opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Chef hat icon -->
+  <g transform="translate(700, 120)" opacity="0.4">
+    <ellipse cx="0" cy="40" rx="40" ry="8" fill="#f5f5f5"/>
+    <rect x="-35" y="15" width="70" height="30" fill="#ffffff"/>
+    <ellipse cx="0" cy="15" rx="35" ry="25" fill="#ffffff"/>
+  </g>
+
+  <!-- Text -->
+  <text x="400" y="100" font-family="Arial, sans-serif" font-size="48" fill="#dc2626" text-anchor="middle" font-weight="bold">
+    Erfurt Pizza
+  </text>
+  <text x="400" y="140" font-family="Arial, sans-serif" font-size="24" fill="#f97316" text-anchor="middle">
+    Frisch zubereitet mit Liebe
+  </text>
+</svg>

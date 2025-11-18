@@ -1,0 +1,69 @@
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="250" cy="250" r="240" fill="#fef3f3" opacity="0.5"/>
+
+  <!-- Pizza base -->
+  <circle cx="250" cy="250" r="180" fill="#f4a460"/>
+
+  <!-- Cheese layer -->
+  <circle cx="250" cy="250" r="165" fill="#ffd700"/>
+
+  <!-- Pizza slice cutout to show it's a pizza -->
+  <path d="M 250 250 L 250 70 A 180 180 0 0 1 360 130 Z" fill="#dc2626" opacity="0.9"/>
+
+  <!-- Toppings on the slice -->
+  <!-- Pepperoni -->
+  <circle cx="280" cy="140" r="12" fill="#c41e3a"/>
+  <circle cx="310" cy="160" r="12" fill="#c41e3a"/>
+  <circle cx="285" cy="185" r="12" fill="#c41e3a"/>
+
+  <!-- Mushrooms -->
+  <ellipse cx="300" cy="210" rx="15" ry="10" fill="#8b7355"/>
+  <ellipse cx="330" cy="195" rx="15" ry="10" fill="#8b7355"/>
+
+  <!-- More pepperoni on main pizza -->
+  <circle cx="180" cy="200" r="15" fill="#c41e3a"/>
+  <circle cx="320" cy="280" r="15" fill="#c41e3a"/>
+  <circle cx="200" cy="320" r="15" fill="#c41e3a"/>
+  <circle cx="150" cy="250" r="15" fill="#c41e3a"/>
+  <circle cx="280" cy="330" r="15" fill="#c41e3a"/>
+  <circle cx="220" cy="170" r="15" fill="#c41e3a"/>
+
+  <!-- Green peppers -->
+  <ellipse cx="170" cy="280" rx="18" ry="12" fill="#228b22" opacity="0.8"/>
+  <ellipse cx="300" cy="250" rx="18" ry="12" fill="#228b22" opacity="0.8"/>
+  <ellipse cx="240" cy="310" rx="18" ry="12" fill="#228b22" opacity="0.8"/>
+
+  <!-- Mushrooms -->
+  <ellipse cx="200" cy="240" rx="20" ry="14" fill="#8b7355"/>
+  <ellipse cx="270" cy="200" rx="20" ry="14" fill="#8b7355"/>
+  <ellipse cx="180" cy="340" rx="20" ry="14" fill="#8b7355"/>
+  <ellipse cx="320" cy="320" rx="20" ry="14" fill="#8b7355"/>
+
+  <!-- Olives -->
+  <circle cx="230" cy="280" r="8" fill="#2d2d2d"/>
+  <circle cx="260" cy="260" r="8" fill="#2d2d2d"/>
+  <circle cx="310" cy="300" r="8" fill="#2d2d2d"/>
+  <circle cx="190" cy="310" r="8" fill="#2d2d2d"/>
+
+  <!-- Crust texture -->
+  <circle cx="250" cy="250" r="180" fill="none" stroke="#d2691e" stroke-width="8" opacity="0.3"/>
+
+  <!-- Cheese strings on lifted slice -->
+  <path d="M 280 140 Q 260 180 250 250" stroke="#fff8dc" stroke-width="3" fill="none" opacity="0.7"/>
+  <path d="M 310 160 Q 280 200 250 250" stroke="#fff8dc" stroke-width="2" fill="none" opacity="0.7"/>
+
+  <!-- Shadow -->
+  <ellipse cx="250" cy="450" rx="200" ry="30" fill="#000" opacity="0.1"/>
+
+  <!-- Steam effect -->
+  <path d="M 200 80 Q 195 60 200 40" stroke="#e0e0e0" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round">
+    <animate attributeName="opacity" values="0.5;0.2;0.5" dur="2s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 250 60 Q 245 40 250 20" stroke="#e0e0e0" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round">
+    <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.5s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 300 70 Q 295 50 300 30" stroke="#e0e0e0" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round">
+    <animate attributeName="opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite"/>
+  </path>
+</svg>
