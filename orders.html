@@ -584,8 +584,25 @@
 
             const items = order.cart.map(item => {
                 const sizeText = item.size ? ` (${item.size})` : '';
-                const itemTotal = item.price * item.quantity;
-                return `<li><span>${item.quantity}x ${item.name}${sizeText}</span><span>${itemTotal.toFixed(2)} €</span></li>`;
+
+                // Calculate total including extras
+                const basePrice = item.price;
+                const extrasPrice = (item.extras || []).reduce((sum, extra) => sum + extra.price, 0);
+                const itemUnitPrice = basePrice + extrasPrice;
+                const itemTotal = itemUnitPrice * item.quantity;
+
+                // Build extras display
+                let extrasHTML = '';
+                if(item.extras && item.extras.length > 0) {
+                    extrasHTML = '<br><small style="color: #666; margin-left: 1.5rem;">';
+                    item.extras.forEach(extra => {
+                        const extraPriceText = extra.price === 0 ? '' : ` (+${extra.price.toFixed(2)}€)`;
+                        extrasHTML += `+ ${extra.name}${extraPriceText} `;
+                    });
+                    extrasHTML += '</small>';
+                }
+
+                return `<li><span>${item.quantity}x ${item.name}${sizeText}${extrasHTML}</span><span>${itemTotal.toFixed(2)} €</span></li>`;
             }).join('');
 
             return `
@@ -667,11 +684,24 @@
 
             const items = order.cart.map(item => {
                 const sizeText = item.size ? ` (${item.size})` : '';
+
+                // Build extras display
+                let extrasHTML = '';
+                if(item.extras && item.extras.length > 0) {
+                    extrasHTML = '<tr><td colspan="2" style="padding: 4px 0 4px 40px; font-size: 14px; color: #666;">';
+                    item.extras.forEach(extra => {
+                        const extraPriceText = extra.price === 0 ? '' : ` (+${extra.price.toFixed(2)}€)`;
+                        extrasHTML += `+ ${extra.name}${extraPriceText}<br>`;
+                    });
+                    extrasHTML += '</td></tr>';
+                }
+
                 return `
                     <tr>
                         <td style="padding: 8px 0; font-size: 18px; font-weight: bold;">${item.quantity}x</td>
                         <td style="padding: 8px 0; font-size: 18px;">${item.name}${sizeText}</td>
                     </tr>
+                    ${extrasHTML}
                 `;
             }).join('');
 
@@ -831,14 +861,32 @@
 
             const items = order.cart.map(item => {
                 const sizeText = item.size ? ` (${item.size})` : '';
-                const itemTotal = item.price * item.quantity;
+
+                // Calculate total including extras
+                const basePrice = item.price;
+                const extrasPrice = (item.extras || []).reduce((sum, extra) => sum + extra.price, 0);
+                const itemUnitPrice = basePrice + extrasPrice;
+                const itemTotal = itemUnitPrice * item.quantity;
+
+                // Build extras display
+                let extrasHTML = '';
+                if(item.extras && item.extras.length > 0) {
+                    extrasHTML = '<tr><td colspan="4" style="padding: 5px 10px 10px 40px; border-bottom: 1px solid #ddd; font-size: 12px; color: #666;">';
+                    item.extras.forEach(extra => {
+                        const extraPriceText = extra.price === 0 ? '' : ` (+${extra.price.toFixed(2)}€)`;
+                        extrasHTML += `+ ${extra.name}${extraPriceText}<br>`;
+                    });
+                    extrasHTML += '</td></tr>';
+                }
+
                 return `
                     <tr>
-                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.quantity}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.name}${sizeText}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right;">${item.price.toFixed(2)} €</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right; font-weight: bold;">${itemTotal.toFixed(2)} €</td>
+                        <td style="padding: 10px; border-bottom: ${extrasHTML ? 'none' : '1px solid #ddd'};">${item.quantity}</td>
+                        <td style="padding: 10px; border-bottom: ${extrasHTML ? 'none' : '1px solid #ddd'};">${item.name}${sizeText}</td>
+                        <td style="padding: 10px; border-bottom: ${extrasHTML ? 'none' : '1px solid #ddd'}; text-align: right;">${itemUnitPrice.toFixed(2)} €</td>
+                        <td style="padding: 10px; border-bottom: ${extrasHTML ? 'none' : '1px solid #ddd'}; text-align: right; font-weight: bold;">${itemTotal.toFixed(2)} €</td>
                     </tr>
+                    ${extrasHTML}
                 `;
             }).join('');
 
