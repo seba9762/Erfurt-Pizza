@@ -504,6 +504,58 @@
         </div>
     </div>
 
+    <!-- Extras Selection Modal -->
+    <div class="extras-modal" id="extras-modal">
+        <div class="extras-modal__content">
+            <div class="extras-modal__header">
+                <h2><i class="fas fa-plus-circle"></i> Extras hinzufügen</h2>
+                <button class="extras-modal__close" id="extras-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="extras-modal__body">
+                <div class="extras-modal__item-info" id="extras-item-info">
+                    <!-- Item details will be shown here -->
+                </div>
+
+                <h3 class="extras-modal__section-title">
+                    <i class="fas fa-cheese"></i> Wählen Sie Ihre Extras
+                </h3>
+
+                <div class="extras-list" id="extras-list">
+                    <!-- Extras will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div class="extras-modal__footer">
+                <div class="extras-summary">
+                    <div class="extras-summary__item">
+                        <span>Basis-Preis:</span>
+                        <span id="extras-base-price">0,00 €</span>
+                    </div>
+                    <div class="extras-summary__item">
+                        <span>Extras:</span>
+                        <span id="extras-additional-price">0,00 €</span>
+                    </div>
+                    <div class="extras-summary__item extras-summary__total">
+                        <span>Gesamt:</span>
+                        <span id="extras-total-price">0,00 €</span>
+                    </div>
+                </div>
+
+                <div class="extras-modal__actions">
+                    <button class="btn btn-secondary" id="extras-skip">
+                        Ohne Extras fortfahren
+                    </button>
+                    <button class="btn btn-primary" id="extras-add-to-cart">
+                        <i class="fas fa-shopping-cart"></i> In den Warenkorb
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Order Confirmation Modal -->
     <div class="confirmation-modal" id="confirmation-modal">
         <div class="confirmation-modal__content">

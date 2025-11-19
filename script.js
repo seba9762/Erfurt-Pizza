@@ -232,7 +232,7 @@ cartModal?.addEventListener('click', (e) => {
     }
 });
 
-// Add to cart function
+// Add to cart function - now shows extras modal first
 function addToCart(itemId, button) {
     const item = menuData.find(i => i.id === itemId);
     if(!item) return;
@@ -247,10 +247,39 @@ function addToCart(itemId, button) {
         size = activeSize ? activeSize.getAttribute('data-size') : item.sizes[0].size;
     }
 
-    // Check if item already in cart
-    const existingItemIndex = cart.findIndex(cartItem =>
-        cartItem.id === itemId && cartItem.size === size
-    );
+    // Store current item data for extras modal
+    window.currentItemForExtras = {
+        id: itemId,
+        name: item.name,
+        price: price,
+        size: size,
+        image: item.image,
+        category: item.category
+    };
+
+    // Show extras modal
+    showExtrasModal();
+}
+
+// Final add to cart with extras
+function finalAddToCart(selectedExtras = []) {
+    const itemData = window.currentItemForExtras;
+    if(!itemData) return;
+
+    // Calculate total price including extras
+    let totalPrice = itemData.price;
+    selectedExtras.forEach(extra => {
+        totalPrice += extra.price;
+    });
+
+    // Check if item already in cart (same item, size, and extras)
+    const extrasString = selectedExtras.map(e => e.name).sort().join(',');
+    const existingItemIndex = cart.findIndex(cartItem => {
+        const cartExtrasString = (cartItem.extras || []).map(e => e.name).sort().join(',');
+        return cartItem.id === itemData.id &&
+               cartItem.size === itemData.size &&
+               cartExtrasString === extrasString;
+    });
 
     if(existingItemIndex > -1) {
         // Increase quantity
@@ -258,21 +287,17 @@ function addToCart(itemId, button) {
     } else {
         // Add new item
         cart.push({
-            id: itemId,
-            name: item.name,
-            price: price,
-            size: size,
+            id: itemData.id,
+            name: itemData.name,
+            price: itemData.price,
+            size: itemData.size,
             quantity: 1,
-            image: item.image,
-            category: item.category
+            image: itemData.image,
+            category: itemData.category,
+            extras: selectedExtras,
+            totalPrice: totalPrice
         });
     }
-
-    // Animate button
-    button.innerHTML = '<i class="fas fa-check"></i>';
-    setTimeout(() => {
-        button.innerHTML = '<i class="fas fa-plus"></i>';
-    }, 1000);
 
     // Update cart
     updateCartUI();
@@ -280,6 +305,9 @@ function addToCart(itemId, button) {
 
     // Show notification
     showNotification('Zum Warenkorb hinzugefügt!');
+
+    // Clear current item data
+    window.currentItemForExtras = null;
 }
 
 // Update cart UI
@@ -324,7 +352,23 @@ function createCartItem(item, index) {
     cartItem.className = 'cart-item';
 
     const sizeText = item.size ? ` (${item.size})` : '';
-    const itemTotal = item.price * item.quantity;
+
+    // Calculate total including extras
+    const basePrice = item.price;
+    const extrasPrice = (item.extras || []).reduce((sum, extra) => sum + extra.price, 0);
+    const itemUnitPrice = basePrice + extrasPrice;
+    const itemTotal = itemUnitPrice * item.quantity;
+
+    // Create extras list HTML
+    let extrasHTML = '';
+    if(item.extras && item.extras.length > 0) {
+        extrasHTML = '<div class="cart-item__extras">';
+        item.extras.forEach(extra => {
+            const extraPriceText = extra.price === 0 ? '' : `+${extra.price.toFixed(2)}€`;
+            extrasHTML += `<span class="extra-tag"><i class="fas fa-plus"></i> ${extra.name} ${extraPriceText}</span>`;
+        });
+        extrasHTML += '</div>';
+    }
 
     cartItem.innerHTML = `
         <div class="cart-item__image">
@@ -333,6 +377,7 @@ function createCartItem(item, index) {
         <div class="cart-item__info">
             <h4 class="cart-item__title">${item.name}${sizeText}</h4>
             <p class="cart-item__details">${getCategoryName(item.category)}</p>
+            ${extrasHTML}
             <div class="cart-item__footer">
                 <span class="cart-item__price">${itemTotal.toFixed(2)} €</span>
                 <div class="cart-item__quantity">
@@ -385,7 +430,13 @@ function removeFromCart(index) {
 
 // Update cart totals
 function updateCartTotals() {
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    // Calculate subtotal including extras
+    const subtotal = cart.reduce((sum, item) => {
+        const basePrice = item.price;
+        const extrasPrice = (item.extras || []).reduce((extrasSum, extra) => extrasSum + extra.price, 0);
+        const itemUnitPrice = basePrice + extrasPrice;
+        return sum + (itemUnitPrice * item.quantity);
+    }, 0);
 
     // Check delivery method
     const deliveryMethod = document.querySelector('input[name="delivery"]:checked')?.value;
@@ -490,12 +541,25 @@ function updateCheckoutSummary() {
 
     cart.forEach(item => {
         const sizeText = item.size ? ` (${item.size})` : '';
-        const itemTotal = item.price * item.quantity;
+
+        // Calculate item total including extras
+        const basePrice = item.price;
+        const extrasPrice = (item.extras || []).reduce((sum, extra) => sum + extra.price, 0);
+        const itemUnitPrice = basePrice + extrasPrice;
+        const itemTotal = itemUnitPrice * item.quantity;
 
         const checkoutItem = document.createElement('div');
         checkoutItem.className = 'checkout-item';
+
+        // Build extras text
+        let extrasText = '';
+        if(item.extras && item.extras.length > 0) {
+            const extrasNames = item.extras.map(e => e.name).join(', ');
+            extrasText = `<br><small style="color: #666; margin-left: 1rem;">+ ${extrasNames}</small>`;
+        }
+
         checkoutItem.innerHTML = `
-            <span>${item.quantity}x ${item.name}${sizeText}</span>
+            <span>${item.quantity}x ${item.name}${sizeText}${extrasText}</span>
             <span>${itemTotal.toFixed(2)} €</span>
         `;
         checkoutItems.appendChild(checkoutItem);
@@ -503,7 +567,12 @@ function updateCheckoutSummary() {
 
     // Calculate total
     const deliveryMethod = document.querySelector('input[name="delivery"]:checked')?.value;
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const subtotal = cart.reduce((sum, item) => {
+        const basePrice = item.price;
+        const extrasPrice = (item.extras || []).reduce((extrasSum, extra) => extrasSum + extra.price, 0);
+        const itemUnitPrice = basePrice + extrasPrice;
+        return sum + (itemUnitPrice * item.quantity);
+    }, 0);
     let deliveryFee = deliveryMethod === 'delivery' ? deliveryInfo.fee : 0;
     let discount = deliveryMethod === 'pickup' ? subtotal * deliveryInfo.pickupDiscount : 0;
 
@@ -671,6 +740,147 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+/*==================== EXTRAS MODAL ====================*/
+const extrasModal = document.getElementById('extras-modal');
+const extrasClose = document.getElementById('extras-close');
+const extrasSkipBtn = document.getElementById('extras-skip');
+const extrasAddToCartBtn = document.getElementById('extras-add-to-cart');
+const extrasList = document.getElementById('extras-list');
+const extrasItemInfo = document.getElementById('extras-item-info');
+
+let selectedExtras = [];
+
+// Show extras modal
+function showExtrasModal() {
+    const itemData = window.currentItemForExtras;
+    if(!itemData) return;
+
+    // Display item info
+    const sizeText = itemData.size ? ` (${itemData.size})` : '';
+    extrasItemInfo.innerHTML = `
+        <div class="extras-item-display">
+            <img src="${itemData.image}" alt="${itemData.name}" onerror="this.src='assets/placeholder.jpg'">
+            <div>
+                <h4>${itemData.name}${sizeText}</h4>
+                <p>${getCategoryName(itemData.category)}</p>
+            </div>
+        </div>
+    `;
+
+    // Reset selected extras
+    selectedExtras = [];
+
+    // Populate extras list
+    populateExtrasList(itemData);
+
+    // Update prices
+    updateExtrasPrice();
+
+    // Show modal
+    extrasModal.classList.add('show');
+}
+
+// Populate extras list
+function populateExtrasList(itemData) {
+    extrasList.innerHTML = '';
+
+    // Filter extras based on category
+    let availableExtras = [...extras];
+
+    // For non-pizza items, filter out pizza-specific extras
+    if(itemData.category !== 'pizza') {
+        availableExtras = availableExtras.filter(extra => {
+            const pizzaOnlyExtras = ['Extra Käse', 'Extra Salami', 'Extra Schinken',
+                                     'Extra Champignons', 'Extra Paprika', 'Extra Oliven'];
+            return !pizzaOnlyExtras.includes(extra.name);
+        });
+    }
+
+    availableExtras.forEach((extra, index) => {
+        const extraItem = document.createElement('label');
+        extraItem.className = 'extra-item';
+
+        const priceText = extra.price === 0 ? 'Kostenlos' : `+${extra.price.toFixed(2)} €`;
+
+        extraItem.innerHTML = `
+            <input type="checkbox" class="extra-checkbox" data-index="${index}" data-name="${extra.name}" data-price="${extra.price}">
+            <div class="extra-item__content">
+                <span class="extra-item__name">
+                    <i class="fas fa-plus-circle"></i> ${extra.name}
+                </span>
+                <span class="extra-item__price">${priceText}</span>
+            </div>
+        `;
+
+        extrasList.appendChild(extraItem);
+    });
+
+    // Add event listeners
+    document.querySelectorAll('.extra-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', handleExtraSelection);
+    });
+}
+
+// Handle extra selection
+function handleExtraSelection(e) {
+    const checkbox = e.target;
+    const extraName = checkbox.getAttribute('data-name');
+    const extraPrice = parseFloat(checkbox.getAttribute('data-price'));
+
+    if(checkbox.checked) {
+        // Add extra
+        selectedExtras.push({
+            name: extraName,
+            price: extraPrice
+        });
+    } else {
+        // Remove extra
+        selectedExtras = selectedExtras.filter(extra => extra.name !== extraName);
+    }
+
+    updateExtrasPrice();
+}
+
+// Update extras price display
+function updateExtrasPrice() {
+    const itemData = window.currentItemForExtras;
+    if(!itemData) return;
+
+    const basePrice = itemData.price;
+    const extrasPrice = selectedExtras.reduce((sum, extra) => sum + extra.price, 0);
+    const totalPrice = basePrice + extrasPrice;
+
+    document.getElementById('extras-base-price').textContent = basePrice.toFixed(2) + ' €';
+    document.getElementById('extras-additional-price').textContent = extrasPrice.toFixed(2) + ' €';
+    document.getElementById('extras-total-price').textContent = totalPrice.toFixed(2) + ' €';
+}
+
+// Close extras modal
+extrasClose?.addEventListener('click', () => {
+    extrasModal.classList.remove('show');
+    window.currentItemForExtras = null;
+});
+
+// Close when clicking outside
+extrasModal?.addEventListener('click', (e) => {
+    if(e.target === extrasModal) {
+        extrasModal.classList.remove('show');
+        window.currentItemForExtras = null;
+    }
+});
+
+// Skip extras - add without extras
+extrasSkipBtn?.addEventListener('click', () => {
+    finalAddToCart([]);
+    extrasModal.classList.remove('show');
+});
+
+// Add to cart with selected extras
+extrasAddToCartBtn?.addEventListener('click', () => {
+    finalAddToCart(selectedExtras);
+    extrasModal.classList.remove('show');
+});
 
 /*==================== SMOOTH SCROLLING ====================*/
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
