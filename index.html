@@ -6,11 +6,83 @@
     <meta name="description" content="Erfurt Pizza - Die beste Pizza in Erfurt! Bestellen Sie Pizza, Burger, indische Spezialitäten und mehr. Lieferservice & Catering in Erfurt.">
     <meta name="keywords" content="Pizza Erfurt, Pizza bestellen, Lieferservice Erfurt, Burger Erfurt, Indische Spezialitäten">
     <title>Erfurt Pizza - Beste Pizza, Burger & Indische Spezialitäten | Lieferservice Erfurt</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#DC2626">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="restaurant">
+    <meta property="og:url" content="https://erfurt-pizza.de/">
+    <meta property="og:title" content="Erfurt Pizza - Beste Pizza, Burger & Indische Spezialitäten">
+    <meta property="og:description" content="Authentische Pizza, saftige Burger und köstliche indische Spezialitäten - frisch zubereitet und direkt zu Ihnen geliefert! 20% Rabatt bei Abholung.">
+    <meta property="og:image" content="https://erfurt-pizza.de/assets/hero-pizza.svg">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:site_name" content="Erfurt Pizza">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://erfurt-pizza.de/">
+    <meta name="twitter:title" content="Erfurt Pizza - Beste Pizza, Burger & Indische Spezialitäten">
+    <meta name="twitter:description" content="Authentische Pizza, saftige Burger und köstliche indische Spezialitäten - frisch zubereitet und direkt zu Ihnen geliefert!">
+    <meta name="twitter:image" content="https://erfurt-pizza.de/assets/hero-pizza.svg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://erfurt-pizza.de/">
+
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Schema.org JSON-LD for Restaurant -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Erfurt Pizza",
+      "image": "https://erfurt-pizza.de/assets/hero-pizza.svg",
+      "description": "Authentische Pizza, saftige Burger und köstliche indische Spezialitäten - frisch zubereitet und direkt zu Ihnen geliefert!",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "An der Lache 41",
+        "addressLocality": "Erfurt",
+        "postalCode": "99086",
+        "addressCountry": "DE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "50.98",
+        "longitude": "11.0"
+      },
+      "telephone": "+49-361-65442275",
+      "priceRange": "€€",
+      "servesCuisine": ["Pizza", "Burger", "Indian"],
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "16:30",
+          "closes": "22:30"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Saturday", "Sunday"],
+          "opens": "14:45",
+          "closes": "22:30"
+        }
+      ],
+      "acceptsReservations": "false",
+      "hasDeliveryMethod": {
+        "@type": "DeliveryMethod",
+        "name": "Home Delivery"
+      }
+    }
+    </script>
 </head>
 <body>
     <!-- Header & Navigation -->
@@ -81,7 +153,7 @@
             </div>
             <div class="hero__image">
                 <div class="hero__image-bg"></div>
-                <img src="assets/hero-pizza.svg" alt="Delicious Pizza" class="hero__img">
+                <img src="assets/hero-pizza.svg" alt="Frische Pizza mit Belag - Erfurt Pizza Lieferservice für authentische italienische Pizza, Burger und indische Spezialitäten" class="hero__img">
             </div>
         </div>
         <div class="hero__scroll">
@@ -132,7 +204,7 @@
                 </div>
             </div>
             <div class="about__img">
-                <img src="assets/about-img.svg" alt="Restaurant Interior">
+                <img src="assets/about-img.svg" alt="Erfurt Pizza Restaurant - Gemütliche Atmosphäre für Pizza, Burger und indische Küche in Erfurt An der Lache">
             </div>
         </div>
     </section>

@@ -1,11 +1,5 @@
-# robots.txt for Erfurt Pizza
-
 User-agent: *
 Allow: /
+Disallow: /orders.html
 
-# Sitemap location
-Sitemap: https://your-domain.com/sitemap.xml
-
-# Disallow admin/private areas (if any in future)
-# Disallow: /admin/
-# Disallow: /private/
+Sitemap: https://erfurt-pizza.de/sitemap.xml
