@@ -476,6 +476,7 @@
     </div>
 
     <script src="menu-data.js"></script>
+    <script src="print-receipts.js"></script>
     <script>
         let orders = [];
         let confirmCallback = null;
@@ -851,13 +852,27 @@
             }, 250);
         }
 
+        // Print both receipts automatically in sequence
+        function printBothReceipts(orderId) {
+            // First print kitchen receipt
+            printKitchenReceipt(orderId);
+
+            // Then print invoice after a short delay
+            setTimeout(() => {
+                printInvoice(orderId);
+            }, 1000);
+        }
+
+        // Make printBothReceipts globally accessible
+        window.printBothReceipts = printBothReceipts;
+
         function printInvoice(orderId) {
             const order = orders.find(o => o.id === orderId);
             if (!order) return;
 
             const printWindow = window.open('', '_blank');
             const date = new Date(order.timestamp);
-            const formattedDate = date.toLocaleDateString('de-DE');
+            const formattedDate = date.toLocaleString('de-DE');
 
             const items = order.cart.map(item => {
                 const sizeText = item.size ? ` (${item.size})` : '';
@@ -871,7 +886,7 @@
                 // Build extras display
                 let extrasHTML = '';
                 if(item.extras && item.extras.length > 0) {
-                    extrasHTML = '<tr><td colspan="4" style="padding: 5px 10px 10px 40px; border-bottom: 1px solid #ddd; font-size: 12px; color: #666;">';
+                    extrasHTML = '<tr><td colspan="3" style="padding: 4px 0 4px 40px; font-size: 14px; color: #666;">';
                     item.extras.forEach(extra => {
                         const extraPriceText = extra.price === 0 ? '' : ` (+${extra.price.toFixed(2)}€)`;
                         extrasHTML += `+ ${extra.name}${extraPriceText}<br>`;
@@ -881,10 +896,9 @@
 
                 return `
                     <tr>
-                        <td style="padding: 10px; border-bottom: ${extrasHTML ? 'none' : '1px solid #ddd'};">${item.quantity}</td>
-                        <td style="padding: 10px; border-bottom: ${extrasHTML ? 'none' : '1px solid #ddd'};">${item.name}${sizeText}</td>
-                        <td style="padding: 10px; border-bottom: ${extrasHTML ? 'none' : '1px solid #ddd'}; text-align: right;">${itemUnitPrice.toFixed(2)} €</td>
-                        <td style="padding: 10px; border-bottom: ${extrasHTML ? 'none' : '1px solid #ddd'}; text-align: right; font-weight: bold;">${itemTotal.toFixed(2)} €</td>
+                        <td style="padding: 8px 0; font-size: 16px; font-weight: bold;">${item.quantity}x</td>
+                        <td style="padding: 8px 0; font-size: 16px;">${item.name}${sizeText}</td>
+                        <td style="padding: 8px 0; font-size: 16px; text-align: right;">${itemTotal.toFixed(2)}€</td>
                     </tr>
                     ${extrasHTML}
                 `;
@@ -896,126 +910,140 @@
                 <head>
                     <title>Rechnung #${order.id}</title>
                     <style>
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                        }
                         body {
-                            font-family: Arial, sans-serif;
-                            padding: 40px;
-                            max-width: 800px;
-                            margin: 0 auto;
+                            font-family: 'Courier New', monospace;
+                            padding: 20px;
+                            max-width: 400px;
                         }
                         .header {
-                            display: flex;
-                            justify-content: space-between;
-                            margin-bottom: 40px;
+                            text-align: center;
+                            border-bottom: 3px solid #000;
+                            padding-bottom: 15px;
+                            margin-bottom: 15px;
                         }
-                        .company-info h1 {
-                            color: #dc2626;
+                        .header h1 {
+                            font-size: 32px;
+                            margin-bottom: 5px;
+                        }
+                        .header h2 {
+                            font-size: 24px;
                             margin-bottom: 10px;
                         }
-                        .invoice-info {
-                            text-align: right;
-                        }
-                        .invoice-info h2 {
-                            color: #333;
+                        .company-info {
+                            text-align: center;
+                            font-size: 12px;
                             margin-bottom: 10px;
                         }
-                        .customer-info {
-                            background: #f9fafb;
-                            padding: 20px;
-                            border-radius: 5px;
-                            margin-bottom: 30px;
+                        .section {
+                            margin-bottom: 20px;
+                            padding-bottom: 15px;
+                            border-bottom: 2px dashed #666;
+                        }
+                        .section:last-child {
+                            border-bottom: none;
+                        }
+                        .label {
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-transform: uppercase;
+                            margin-bottom: 5px;
+                        }
+                        .value {
+                            font-size: 16px;
+                            margin-bottom: 10px;
                         }
                         table {
                             width: 100%;
                             border-collapse: collapse;
-                            margin-bottom: 30px;
                         }
-                        th {
-                            background: #333;
-                            color: white;
+                        .total-section {
+                            background: #000;
+                            color: #fff;
                             padding: 12px;
-                            text-align: left;
-                        }
-                        th:last-child, td:last-child {
-                            text-align: right;
-                        }
-                        .total-row {
-                            background: #dc2626;
-                            color: white;
-                            font-size: 18px;
+                            text-align: center;
+                            font-size: 20px;
                             font-weight: bold;
+                            margin: 20px 0;
                         }
                         .footer {
-                            margin-top: 40px;
-                            padding-top: 20px;
-                            border-top: 2px solid #ddd;
                             text-align: center;
                             font-size: 12px;
-                            color: #666;
+                            border-top: 2px solid #000;
+                            padding-top: 10px;
+                            margin-top: 20px;
+                        }
+                        @media print {
+                            body { padding: 0; }
                         }
                     </style>
                 </head>
                 <body>
                     <div class="header">
+                        <h1>🍕 ERFURT PIZZA</h1>
+                        <h2>RECHNUNG</h2>
                         <div class="company-info">
-                            <h1>🍕 Erfurt Pizza</h1>
-                            <p>An der Lache 41<br>
-                            99086 Erfurt<br>
+                            An der Lache 41, 99086 Erfurt<br>
                             Tel: 0361 65 44 22 75<br>
-                            Tel: 0361 73 10 76 56</p>
-                        </div>
-                        <div class="invoice-info">
-                            <h2>Rechnung</h2>
-                            <p><strong>Rechnungsnr:</strong> ${order.id}<br>
-                            <strong>Datum:</strong> ${formattedDate}</p>
+                            Tel: 0361 73 10 76 56
                         </div>
                     </div>
 
-                    <div class="customer-info">
-                        <h3>Kunde</h3>
-                        <p>
-                            <strong>${order.name}</strong><br>
-                            ${order.deliveryMethod === 'delivery' ? `
-                                ${order.street}<br>
-                                ${order.zip} ${order.city}<br>
-                            ` : 'Abholung'}
+                    <div class="section">
+                        <div class="label">Rechnungsnr:</div>
+                        <div class="value">#${order.id}</div>
+                        <div class="label">Datum:</div>
+                        <div class="value">${formattedDate}</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="label">Kunde:</div>
+                        <div class="value">
+                            ${order.name}<br>
+                            ${order.deliveryMethod === 'delivery' ? `${order.street}<br>${order.zip} ${order.city}<br>` : ''}
                             Tel: ${order.phone}
                             ${order.email ? `<br>E-Mail: ${order.email}` : ''}
-                        </p>
+                        </div>
                     </div>
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Menge</th>
-                                <th>Artikel</th>
-                                <th style="text-align: right;">Einzelpreis</th>
-                                <th style="text-align: right;">Gesamt</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="section">
+                        <div class="label">Bestellte Artikel:</div>
+                        <table>
                             ${items}
-                            <tr class="total-row">
-                                <td colspan="3" style="padding: 15px;">Gesamtbetrag</td>
-                                <td style="padding: 15px; text-align: right;">${order.total}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        </table>
+                    </div>
 
-                    <p><strong>Zahlungsmethode:</strong>
-                        ${order.paymentMethod === 'cash' ? 'Barzahlung' :
-                          order.paymentMethod === 'paypal' ? 'PayPal' :
-                          'Kreditkarte'}
-                    </p>
+                    <div class="total-section">
+                        GESAMT: ${order.total}
+                    </div>
 
-                    <p><strong>Lieferart:</strong>
-                        ${order.deliveryMethod === 'delivery' ? 'Lieferung' : 'Abholung (20% Rabatt)'}
-                    </p>
+                    <div class="section">
+                        <div class="label">Zahlungsmethode:</div>
+                        <div class="value">
+                            ${order.paymentMethod === 'cash' ? '💰 BARZAHLUNG' :
+                              order.paymentMethod === 'paypal' ? '💳 PAYPAL' :
+                              '💳 KREDITKARTE'}
+                        </div>
+                        <div class="label">Lieferart:</div>
+                        <div class="value">
+                            ${order.deliveryMethod === 'delivery' ? '🚚 LIEFERUNG' : '📦 ABHOLUNG (20% RABATT)'}
+                        </div>
+                    </div>
 
-                    ${order.notes ? `<p><strong>Anmerkungen:</strong> ${order.notes}</p>` : ''}
+                    ${order.notes ? `
+                    <div class="section">
+                        <div class="label">⚠️ Anmerkungen:</div>
+                        <div class="value">${order.notes}</div>
+                    </div>
+                    ` : ''}
 
                     <div class="footer">
-                        <p>Vielen Dank für Ihre Bestellung!</p>
-                        <p>Erfurt Pizza - An der Lache 41, 99086 Erfurt</p>
+                        VIELEN DANK FÜR IHRE BESTELLUNG!<br>
+                        Erfurt Pizza - An der Lache 41, 99086 Erfurt
                     </div>
                 </body>
                 </html>

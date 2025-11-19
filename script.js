@@ -624,6 +624,9 @@ function processOrder(orderData) {
     });
     localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
 
+    // Automatically print kitchen receipt and invoice
+    printBothReceipts(orderId);
+
     // Show confirmation
     showOrderConfirmation(orderId, orderData);
 
