@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /orders.html
 
-Sitemap: https://erfurt-pizza.de/sitemap.xml
+Sitemap: https://erfurtpizza.com/sitemap.xml

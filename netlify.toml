@@ -1,0 +1,54 @@
+[build]
+  # Publish directory (for static sites, this is usually the root directory)
+  publish = "."
+
+  # No build command needed for a static HTML site
+  command = ""
+
+[[redirects]]
+  # Redirect www to non-www
+  from = "https://www.erfurtpizza.com/*"
+  to = "https://erfurtpizza.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  # Redirect http to https (Netlify does this automatically, but making it explicit)
+  from = "http://erfurtpizza.com/*"
+  to = "https://erfurtpizza.com/:splat"
+  status = 301
+  force = true
+
+[[headers]]
+  # Apply security headers to all pages
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+[[headers]]
+  # Cache static assets for 1 year
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  # Cache images for 1 year
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  # Cache CSS for 1 year
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  # Cache JavaScript for 1 year
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
