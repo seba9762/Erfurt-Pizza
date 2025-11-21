@@ -1,6 +1,17 @@
-# Erfurt Pizza Backend
+# Erfurt Pizza Backend API
 
-Backend API for processing PayPal and Stripe payments.
+Production-ready Node.js backend for processing payments via PayPal and Stripe.
+
+## Features
+
+- PayPal payment processing
+- Stripe payment processing
+- CORS protection
+- Rate limiting (100 requests per 15 minutes)
+- Request logging
+- Health check endpoints
+- Graceful shutdown
+- Production-ready error handling
 
 ## 🚀 Quick Start
 
@@ -102,41 +113,92 @@ GET /health
 - Expiry: Any future date
 - CVC: Any 3 digits
 
-## 🌐 Deployment
+## 🌐 Production Deployment
 
-### Deploy to Heroku:
+### Option 1: Railway.app (Recommended - $5/month)
 
+1. Push your code to GitHub
+2. Go to https://railway.app/
+3. Create new project → Deploy from GitHub
+4. Select your repository
+5. Configure:
+   - Root Directory: `/backend-template`
+   - Start Command: `npm start`
+6. Add environment variables in Railway dashboard
+7. Deploy!
+
+### Option 2: Render.com ($7/month)
+
+1. Go to https://render.com/
+2. New Web Service → Connect repository
+3. Configure:
+   - Root Directory: `backend-template`
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+4. Add environment variables
+5. Deploy!
+
+### Option 3: DigitalOcean ($12/month)
+
+See [PRODUCTION-HOSTING-GUIDE.md](../PRODUCTION-HOSTING-GUIDE.md) for detailed instructions.
+
+## 📊 Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `PORT` | Server port (default: 3000) | No |
+| `NODE_ENV` | Environment (development/production) | No |
+| `FRONTEND_URL` | Your website URL | Yes |
+| `PAYPAL_MODE` | sandbox or live | Yes |
+| `PAYPAL_CLIENT_ID` | PayPal Client ID | Yes |
+| `PAYPAL_CLIENT_SECRET` | PayPal Secret | Yes |
+| `STRIPE_SECRET_KEY` | Stripe Secret Key | Yes |
+| `STRIPE_PUBLISHABLE_KEY` | Stripe Public Key | Yes |
+
+## 🔒 Security Features
+
+- CORS protection (only accepts requests from configured origins)
+- Rate limiting (100 requests per 15 minutes per IP)
+- Request size limits (10MB max)
+- Input validation
+- Secure error handling (no sensitive info leaked in production)
+
+## 🔧 Monitoring
+
+### Check if backend is running:
 ```bash
-heroku create erfurt-pizza-backend
-heroku config:set PAYPAL_CLIENT_ID=your_id
-heroku config:set PAYPAL_CLIENT_SECRET=your_secret
-heroku config:set STRIPE_SECRET_KEY=your_key
-heroku config:set FRONTEND_URL=https://erfurtpizza.com
-git push heroku main
+curl https://your-backend-url.com/health
 ```
 
-### Deploy to Your Own Server:
+### View logs (Railway/Render):
+Check the dashboard for real-time logs
 
+### View logs (DigitalOcean with PM2):
 ```bash
-# Upload files
-scp -r . user@your-server:/var/www/backend/
-
-# Install and start with PM2
-ssh user@your-server
-cd /var/www/backend
-npm install
-pm2 start server.js --name erfurt-pizza-backend
-pm2 save
+pm2 logs erfurt-pizza-backend
 ```
 
-## 🔒 Security
+## 🆘 Troubleshooting
 
-- Never commit `.env` file
-- Use HTTPS in production
-- Keep API keys secret
-- Implement rate limiting for production
-- Set up webhook signature verification
+### Backend not starting?
+- Check if all environment variables are set
+- Verify PayPal/Stripe credentials are correct
+- Check logs for error messages
+
+### CORS errors?
+- Verify `FRONTEND_URL` matches your actual frontend URL
+- Check if frontend is using correct backend URL
+
+### Payment errors?
+- Ensure you're using correct API keys (test vs live)
+- Check PayPal/Stripe dashboard for error details
 
 ## 📞 Support
 
-See `BACKEND-SETUP-GUIDE.md` for detailed setup instructions.
+For detailed deployment instructions, see:
+- [PRODUCTION-HOSTING-GUIDE.md](../PRODUCTION-HOSTING-GUIDE.md)
+- [BACKEND-SETUP-GUIDE.md](../BACKEND-SETUP-GUIDE.md)
+
+## License
+
+ISC
