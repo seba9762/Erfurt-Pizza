@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zahlung Erfolgreich - Erfurt Pizza</title>
+    <link rel="icon" href="assets/pizza-icon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --success-color: #28a745;
+            --dark-color: #1a1a1a;
+            --light-color: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .success-icon {
+            font-size: 100px;
+            color: var(--success-color);
+            margin-bottom: 30px;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            color: var(--dark-color);
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            background: var(--light-color);
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 0;
+            display: inline-block;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .payment-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+            padding: 12px 25px;
+            border-radius: 50px;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            color: #856404;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            color: #856404;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 40px;
+            background: var(--success-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .success-container {
+                padding: 40px 25px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .order-id {
+                font-size: 18px;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+
+        <h1>Zahlung Erfolgreich!</h1>
+
+        <div class="payment-status">
+            <i class="fas fa-check"></i>
+            <span>Bezahlt</span>
+        </div>
+
+        <p><strong>Vielen Dank für Ihre Bestellung!</strong></p>
+        <p>Ihre Zahlung wurde erfolgreich verarbeitet.</p>
+
+        <div class="order-id" id="order-id-display">
+            Bestellung wird verarbeitet...
+        </div>
+
+        <div class="info-box">
+            <h3><i class="fas fa-info-circle"></i> Nächste Schritte:</h3>
+            <p><strong>✓</strong> Sie erhalten eine Bestellbestätigung</p>
+            <p><strong>✓</strong> Unsere Küche bereitet Ihre Bestellung zu</p>
+            <p><strong>✓</strong> Bei Fragen erreichen Sie uns unter: <strong>0361 65 44 22 75</strong></p>
+        </div>
+
+        <div>
+            <a href="index.html" class="btn">
+                <i class="fas fa-home"></i> Zurück zur Startseite
+            </a>
+            <a href="orders.html" class="btn btn-secondary">
+                <i class="fas fa-receipt"></i> Meine Bestellungen
+            </a>
+        </div>
+    </div>
+
+    <script src="menu-data.js"></script>
+    <script src="print-receipts.js"></script>
+    <script src="script.js"></script>
+    <script src="payment-config.js"></script>
+    <script>
+        // Process the order after successful payment
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get pending order from sessionStorage
+            const pendingOrder = sessionStorage.getItem('pendingOrder');
+
+            if (pendingOrder) {
+                try {
+                    const orderData = JSON.parse(pendingOrder);
+
+                    // In production, you would verify the payment with your backend first
+                    // using verifyPayment() function from payment-config.js
+
+                    // Process the order (this will trigger receipt printing)
+                    const orders = JSON.parse(localStorage.getItem('erfurtPizzaOrders') || '[]');
+                    const orderId = 'EP' + Date.now();
+                    orders.push({
+                        id: orderId,
+                        ...orderData,
+                        timestamp: new Date().toISOString(),
+                        paymentStatus: 'paid'
+                    });
+                    localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
+
+                    // Print receipts
+                    printBothReceipts(orderId);
+
+                    // Display order ID
+                    document.getElementById('order-id-display').innerHTML = `
+                        <i class="fas fa-hashtag"></i> Bestellnummer: <strong>${orderId}</strong>
+                    `;
+
+                    // Clear pending order
+                    sessionStorage.removeItem('pendingOrder');
+
+                    // Clear cart
+                    localStorage.removeItem('erfurtPizzaCart');
+
+                } catch (error) {
+                    console.error('Error processing order:', error);
+                    document.getElementById('order-id-display').innerHTML = `
+                        <span style="color: #dc2626;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Fehler bei der Bestellverarbeitung
+                        </span>
+                    `;
+                }
+            } else {
+                // No pending order
+                document.getElementById('order-id-display').innerHTML = `
+                    <span style="color: #856404;">
+                        <i class="fas fa-info-circle"></i>
+                        Keine ausstehende Bestellung
+                    </span>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

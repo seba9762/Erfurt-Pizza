@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zahlung wird verarbeitet - Erfurt Pizza</title>
+    <link rel="icon" href="assets/pizza-icon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #dc2626;
+            --secondary-color: #f97316;
+            --dark-color: #1a1a1a;
+            --light-color: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .processing-container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .processing-icon {
+            font-size: 80px;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--light-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            color: var(--dark-color);
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .payment-method {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--light-color);
+            padding: 12px 25px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .payment-method i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .warning-box h3 {
+            color: #856404;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .warning-box p {
+            color: #856404;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            color: #0c5460;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box ul {
+            color: #0c5460;
+            font-size: 14px;
+            margin: 10px 0 0 20px;
+            text-align: left;
+        }
+
+        .info-box li {
+            margin: 8px 0;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-notice {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .demo-notice h3 {
+            color: #721c24;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .demo-notice p {
+            color: #721c24;
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .processing-container {
+                padding: 40px 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .payment-method {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="processing-container">
+        <div class="spinner"></div>
+        <div class="processing-icon">
+            <i class="fas fa-credit-card"></i>
+        </div>
+
+        <h1>Zahlung wird verarbeitet...</h1>
+
+        <div class="payment-method">
+            <i class="fab fa-paypal" id="payment-icon"></i>
+            <span id="payment-method-text">PayPal</span>
+        </div>
+
+        <p>Sie werden zur Zahlungsseite weitergeleitet.</p>
+        <p>Bitte schließen Sie dieses Fenster nicht.</p>
+
+        <div class="demo-notice">
+            <h3><i class="fas fa-exclamation-triangle"></i> DEMO-MODUS</h3>
+            <p><strong>Dies ist eine Demonstration.</strong></p>
+            <p>In der Produktion würden Sie jetzt zur echten Zahlungsseite von PayPal oder Stripe weitergeleitet.</p>
+            <p>Für diese Demo wird die Bestellung in 3 Sekunden automatisch bestätigt.</p>
+        </div>
+
+        <div class="info-box">
+            <h3><i class="fas fa-info-circle"></i> So funktioniert die Integration:</h3>
+            <ul>
+                <li><strong>PayPal:</strong> Kunde wird zu PayPal weitergeleitet → Zahlung autorisieren → Zurück zur Website → Bestellung bestätigt</li>
+                <li><strong>Stripe:</strong> Kunde wird zu Stripe Checkout weitergeleitet → Karte eingeben → Zurück zur Website → Bestellung bestätigt</li>
+                <li><strong>Backend erforderlich:</strong> API-Keys sicher auf dem Server speichern</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <h3><i class="fas fa-shield-alt"></i> Wichtig für Produktivbetrieb:</h3>
+            <p>
+                1. Aktivieren Sie die Zahlungsmethode in <strong>payment-config.js</strong><br>
+                2. Fügen Sie Ihre API-Keys hinzu (PayPal Client ID oder Stripe Publishable Key)<br>
+                3. Erstellen Sie Backend-Endpunkte für sichere Zahlungsverarbeitung<br>
+                4. Siehe Kommentare in payment-config.js für Beispiel-Code
+            </p>
+        </div>
+
+        <button class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> Zurück zur Bestellung
+        </button>
+    </div>
+
+    <script src="menu-data.js"></script>
+    <script src="print-receipts.js"></script>
+    <script src="script.js"></script>
+    <script src="payment-config.js"></script>
+    <script>
+        // Get payment method from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentMethod = urlParams.get('method');
+
+        // Update UI based on payment method
+        const iconElement = document.getElementById('payment-icon');
+        const textElement = document.getElementById('payment-method-text');
+
+        if (paymentMethod === 'paypal') {
+            iconElement.className = 'fab fa-paypal';
+            textElement.textContent = 'PayPal';
+        } else if (paymentMethod === 'stripe') {
+            iconElement.className = 'fas fa-credit-card';
+            textElement.textContent = 'Kreditkarte (Stripe)';
+        }
+
+        // Simulate payment processing (in production, this would be handled by payment gateway)
+        setTimeout(() => {
+            // Get pending order from sessionStorage
+            const pendingOrder = sessionStorage.getItem('pendingOrder');
+
+            if (pendingOrder) {
+                try {
+                    const orderData = JSON.parse(pendingOrder);
+
+                    // In production, you would verify the payment with your backend first
+                    // For demo, we'll just process the order directly
+                    console.log('Processing order after payment:', orderData);
+
+                    // Process the order (this will trigger receipt printing)
+                    processOrder(orderData);
+
+                    // Clear pending order
+                    sessionStorage.removeItem('pendingOrder');
+
+                    // Redirect to success page (the confirmation modal is shown by processOrder)
+                    window.location.href = 'index.html';
+
+                } catch (error) {
+                    console.error('Error processing order:', error);
+                    alert('Fehler bei der Bestellverarbeitung. Bitte kontaktieren Sie uns.');
+                    window.location.href = 'index.html';
+                }
+            } else {
+                console.error('No pending order found');
+                alert('Keine ausstehende Bestellung gefunden.');
+                window.location.href = 'index.html';
+            }
+        }, 3000); // 3 second delay for demo
+
+        function goBack() {
+            // Clear pending order
+            sessionStorage.removeItem('pendingOrder');
+            window.location.href = 'index.html';
+        }
+
+        // Prevent accidental page close
+        window.addEventListener('beforeunload', (e) => {
+            if (sessionStorage.getItem('pendingOrder')) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>

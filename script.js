@@ -603,8 +603,8 @@ checkoutForm?.addEventListener('submit', (e) => {
         total: document.getElementById('checkout-total').textContent
     };
 
-    // Process order
-    processOrder(formData);
+    // Route to appropriate payment handler
+    handlePaymentSubmit(formData);
 });
 
 // Process order
@@ -624,8 +624,9 @@ function processOrder(orderData) {
     });
     localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
 
-    // Automatically print customer invoice only (kitchen receipt is for owner/admin only)
-    printInvoice(orderId);
+    // Automatically print kitchen receipt and customer invoice for kitchen
+    // Kitchen gets both: kitchen receipt for preparation + customer invoice for records
+    printBothReceipts(orderId);
 
     // Show confirmation
     showOrderConfirmation(orderId, orderData);

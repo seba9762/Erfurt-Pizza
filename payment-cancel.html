@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zahlung Abgebrochen - Erfurt Pizza</title>
+    <link rel="icon" href="assets/pizza-icon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --warning-color: #ffc107;
+            --dark-color: #1a1a1a;
+            --light-color: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .cancel-container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .cancel-icon {
+            font-size: 100px;
+            color: var(--warning-color);
+            margin-bottom: 30px;
+            animation: shake 0.5s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        h1 {
+            color: var(--dark-color);
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            color: #856404;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            color: #856404;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .info-box ul {
+            color: #856404;
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        .info-box li {
+            margin: 8px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 40px;
+            background: #dc2626;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #f97316;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .order-saved {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #0c5460;
+        }
+
+        .order-saved i {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .cancel-container {
+                padding: 40px 25px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cancel-container">
+        <div class="cancel-icon">
+            <i class="fas fa-times-circle"></i>
+        </div>
+
+        <h1>Zahlung Abgebrochen</h1>
+
+        <p>Sie haben die Zahlung abgebrochen.</p>
+        <p>Ihre Bestellung wurde nicht aufgegeben.</p>
+
+        <div class="order-saved" id="cart-status">
+            <i class="fas fa-shopping-cart"></i>
+            <p style="margin: 0;"><strong>Ihr Warenkorb wurde gespeichert</strong></p>
+            <p style="margin: 5px 0 0 0; font-size: 14px;">Sie können die Bestellung jederzeit fortsetzen.</p>
+        </div>
+
+        <div class="info-box">
+            <h3><i class="fas fa-question-circle"></i> Was möchten Sie tun?</h3>
+            <ul>
+                <li>Versuchen Sie es erneut mit einer anderen Zahlungsmethode</li>
+                <li>Wählen Sie "Barzahlung" für Zahlung bei Lieferung/Abholung</li>
+                <li>Bei Problemen rufen Sie uns an: <strong>0361 65 44 22 75</strong></li>
+            </ul>
+        </div>
+
+        <div>
+            <a href="index.html" class="btn">
+                <i class="fas fa-redo"></i> Bestellung Fortsetzen
+            </a>
+            <a href="index.html" class="btn btn-secondary" onclick="clearCart()">
+                <i class="fas fa-home"></i> Zur Startseite
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Check if there's a pending order
+        const pendingOrder = sessionStorage.getItem('pendingOrder');
+
+        if (pendingOrder) {
+            // Keep the order in sessionStorage so user can try again
+            document.getElementById('cart-status').style.display = 'block';
+        } else {
+            document.getElementById('cart-status').style.display = 'none';
+        }
+
+        function clearCart() {
+            // Clear pending order if user wants to start fresh
+            sessionStorage.removeItem('pendingOrder');
+            return true;
+        }
+    </script>
+</body>
+</html>
