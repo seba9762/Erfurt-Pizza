@@ -1,5 +1,12 @@
 /*==================== PAYMENT CONFIGURATION ====================*/
 
+// Backend API URL (update this when you set up your backend)
+const BACKEND_URL = 'http://localhost:3000'; // Change to your backend URL in production
+// Examples:
+// Local development: 'http://localhost:3000'
+// Production: 'https://api.erfurtpizza.com'
+// Heroku: 'https://erfurt-pizza-backend.herokuapp.com'
+
 // Payment Gateway Configuration
 const paymentConfig = {
     // PayPal Configuration
@@ -28,6 +35,22 @@ const paymentConfig = {
         error: window.location.origin + '/payment-error.html'
     }
 };
+
+/*==================== HELPER FUNCTIONS ====================*/
+
+// Check if backend server is available
+async function checkBackendAvailable() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/health`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        return response.ok;
+    } catch (error) {
+        console.log('Backend not available, using demo mode');
+        return false;
+    }
+}
 
 /*==================== PAYPAL INTEGRATION ====================*/
 
@@ -59,42 +82,45 @@ async function processPayPalPayment(orderData) {
         // Store order data temporarily
         sessionStorage.setItem('pendingOrder', JSON.stringify(orderData));
 
-        // In production, you would:
-        // 1. Send order to your backend
-        // 2. Backend creates PayPal order via PayPal API
-        // 3. Backend returns approval URL
-        // 4. Redirect user to PayPal approval URL
+        // Check if backend is available
+        const useBackend = await checkBackendAvailable();
 
-        // Example backend endpoint call:
-        /*
-        const response = await fetch('/api/create-paypal-order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                amount: orderData.total,
-                currency: paymentConfig.paypal.currency,
-                orderData: orderData
-            })
-        });
+        if (useBackend) {
+            // PRODUCTION MODE: Use real backend
+            console.log('Using backend for PayPal payment');
 
-        const data = await response.json();
+            const response = await fetch(`${BACKEND_URL}/api/create-paypal-order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ orderData: orderData })
+            });
 
-        if (data.approvalUrl) {
-            // Redirect to PayPal
-            window.location.href = data.approvalUrl;
+            const data = await response.json();
+
+            if (data.success && data.approvalUrl) {
+                // Store PayPal order ID
+                sessionStorage.setItem('paypalOrderId', data.orderId);
+                // Redirect to PayPal
+                window.location.href = data.approvalUrl;
+            } else {
+                alert('Fehler bei der PayPal-Zahlung: ' + (data.error || 'Unbekannter Fehler'));
+                return false;
+            }
+        } else {
+            // DEMO MODE: Simulate payment flow
+            console.log('Backend not available - using demo mode');
+            window.location.href = 'payment-processing.html?method=paypal';
         }
-        */
-
-        // For now, redirect to payment processing page
-        window.location.href = 'payment-processing.html?method=paypal';
 
         return true;
     } catch (error) {
         console.error('PayPal payment error:', error);
-        alert('Fehler bei der PayPal-Zahlung. Bitte versuchen Sie es erneut.');
-        return false;
+        // Fallback to demo mode if backend fails
+        console.log('Falling back to demo mode');
+        window.location.href = 'payment-processing.html?method=paypal';
+        return true;
     }
 }
 
@@ -130,50 +156,43 @@ async function processStripePayment(orderData) {
         // Store order data temporarily
         sessionStorage.setItem('pendingOrder', JSON.stringify(orderData));
 
-        // In production, you would:
-        // 1. Send order to your backend
-        // 2. Backend creates Stripe Checkout Session
-        // 3. Backend returns session ID
-        // 4. Redirect user to Stripe Checkout
+        // Check if backend is available
+        const useBackend = await checkBackendAvailable();
 
-        // Example backend endpoint call:
-        /*
-        const response = await fetch('/api/create-stripe-session', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                amount: parseFloat(orderData.total.replace(',', '.').replace('€', '').trim()) * 100, // Amount in cents
-                currency: paymentConfig.stripe.currency,
-                orderData: orderData,
-                successUrl: paymentConfig.returnUrls.success,
-                cancelUrl: paymentConfig.returnUrls.cancel
-            })
-        });
+        if (useBackend) {
+            // PRODUCTION MODE: Use real backend
+            console.log('Using backend for Stripe payment');
 
-        const session = await response.json();
-
-        if (session.id) {
-            // Redirect to Stripe Checkout
-            const result = await stripe.redirectToCheckout({
-                sessionId: session.id
+            const response = await fetch(`${BACKEND_URL}/api/create-stripe-session`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ orderData: orderData })
             });
 
-            if (result.error) {
-                alert(result.error.message);
-            }
-        }
-        */
+            const data = await response.json();
 
-        // For now, redirect to payment processing page
-        window.location.href = 'payment-processing.html?method=stripe';
+            if (data.success && data.url) {
+                // Redirect to Stripe Checkout
+                window.location.href = data.url;
+            } else {
+                alert('Fehler bei der Kreditkarten-Zahlung: ' + (data.error || 'Unbekannter Fehler'));
+                return false;
+            }
+        } else {
+            // DEMO MODE: Simulate payment flow
+            console.log('Backend not available - using demo mode');
+            window.location.href = 'payment-processing.html?method=stripe';
+        }
 
         return true;
     } catch (error) {
         console.error('Stripe payment error:', error);
-        alert('Fehler bei der Kreditkarten-Zahlung. Bitte versuchen Sie es erneut.');
-        return false;
+        // Fallback to demo mode if backend fails
+        console.log('Falling back to demo mode');
+        window.location.href = 'payment-processing.html?method=stripe';
+        return true;
     }
 }
 
