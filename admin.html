@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Erfurt Pizza</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #dc2626;
+        }
+        .admin-header h1 {
+            color: #dc2626;
+            margin: 0;
+        }
+        .orders-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .order-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            background: #fafafa;
+        }
+        .order-card.new {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .order-id {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc2626;
+        }
+        .order-time {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .order-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .order-badge.delivery {
+            background: #3b82f6;
+            color: white;
+        }
+        .order-badge.pickup {
+            background: #10b981;
+            color: white;
+        }
+        .order-details {
+            display: grid;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .order-items {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .item-extras {
+            font-size: 0.85rem;
+            color: #666;
+            margin-left: 2rem;
+        }
+        .order-total {
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-align: right;
+            padding-top: 0.5rem;
+            border-top: 2px solid #dc2626;
+            color: #dc2626;
+        }
+        .order-notes {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        .order-notes strong {
+            color: #856404;
+        }
+        .order-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        .btn-kitchen {
+            background: #dc2626;
+            color: white;
+        }
+        .btn-kitchen:hover {
+            background: #b91c1c;
+        }
+        .btn-invoice {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-invoice:hover {
+            background: #2563eb;
+        }
+        .btn-both {
+            background: #10b981;
+            color: white;
+        }
+        .btn-both:hover {
+            background: #059669;
+        }
+        .btn-clear {
+            background: #6b7280;
+            color: white;
+        }
+        .btn-clear:hover {
+            background: #4b5563;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #dc2626, #f97316);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1><i class="fas fa-pizza-slice"></i> Erfurt Pizza - Admin</h1>
+                <p style="color: #666; margin-top: 0.5rem;">Bestellungsverwaltung & Küchenbons</p>
+            </div>
+            <div>
+                <button class="btn btn-clear" onclick="clearAllOrders()" style="margin-right: 1rem;">
+                    <i class="fas fa-trash"></i> Alle löschen
+                </button>
+                <a href="index.html" class="btn" style="background: #6b7280; color: white;">
+                    <i class="fas fa-home"></i> Zur Startseite
+                </a>
+            </div>
+        </div>
+
+        <div class="stats" id="stats">
+            <!-- Stats will be loaded here -->
+        </div>
+
+        <div id="orders-container">
+            <!-- Orders will be loaded here -->
+        </div>
+    </div>
+
+    <script src="print-receipts.js"></script>
+    <script>
+        // Load orders from localStorage
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem('erfurtPizzaOrders') || '[]');
+            const container = document.getElementById('orders-container');
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h2>Keine Bestellungen</h2>
+                        <p>Es sind noch keine Bestellungen eingegangen.</p>
+                    </div>
+                `;
+                updateStats(orders);
+                return;
+            }
+
+            // Sort by timestamp (newest first)
+            orders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            const ordersHTML = orders.map(order => {
+                const date = new Date(order.timestamp);
+                const formattedDate = date.toLocaleString('de-DE');
+                const isNew = (Date.now() - date.getTime()) < 300000; // Less than 5 minutes old
+
+                const deliveryBadge = order.deliveryMethod === 'delivery'
+                    ? '<span class="order-badge delivery"><i class="fas fa-truck"></i> Lieferung</span>'
+                    : '<span class="order-badge pickup"><i class="fas fa-box"></i> Abholung</span>';
+
+                const itemsHTML = order.cart.map(item => {
+                    const sizeText = item.size ? ` (${item.size})` : '';
+                    const basePrice = item.price;
+                    const extrasPrice = (item.extras || []).reduce((sum, extra) => sum + extra.price, 0);
+                    const itemUnitPrice = basePrice + extrasPrice;
+                    const itemTotal = itemUnitPrice * item.quantity;
+
+                    let extrasHTML = '';
+                    if (item.extras && item.extras.length > 0) {
+                        const extrasText = item.extras.map(e => {
+                            const priceText = e.price === 0 ? '' : ` (+${e.price.toFixed(2)}€)`;
+                            return `${e.name}${priceText}`;
+                        }).join(', ');
+                        extrasHTML = `<div class="item-extras">+ ${extrasText}</div>`;
+                    }
+
+                    return `
+                        <div class="order-item">
+                            <div>
+                                <strong>${item.quantity}x ${item.name}${sizeText}</strong>
+                                ${extrasHTML}
+                            </div>
+                            <div>${itemTotal.toFixed(2)}€</div>
+                        </div>
+                    `;
+                }).join('');
+
+                const notesHTML = order.notes ? `
+                    <div class="order-notes">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Anmerkungen:</strong><br>
+                        ${order.notes}
+                    </div>
+                ` : '';
+
+                const addressHTML = order.deliveryMethod === 'delivery' ? `
+                    <div><strong>Lieferadresse:</strong> ${order.street}, ${order.zip} ${order.city}</div>
+                ` : '';
+
+                return `
+                    <div class="order-card ${isNew ? 'new' : ''}">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">#${order.id}</div>
+                                <div class="order-time">${formattedDate}</div>
+                            </div>
+                            ${deliveryBadge}
+                        </div>
+
+                        <div class="order-details">
+                            <div><strong>Kunde:</strong> ${order.name}</div>
+                            <div><strong>Telefon:</strong> <a href="tel:${order.phone}">${order.phone}</a></div>
+                            ${order.email ? `<div><strong>E-Mail:</strong> ${order.email}</div>` : ''}
+                            ${addressHTML}
+                            <div><strong>Zahlung:</strong> ${getPaymentMethodText(order.paymentMethod)}</div>
+                        </div>
+
+                        ${notesHTML}
+
+                        <div class="order-items">
+                            ${itemsHTML}
+                            <div class="order-total">Gesamt: ${order.total}</div>
+                        </div>
+
+                        <div class="order-actions">
+                            <button class="btn btn-kitchen" onclick="printKitchenReceipt('${order.id}')">
+                                <i class="fas fa-print"></i> Küchenbon drucken
+                            </button>
+                            <button class="btn btn-invoice" onclick="printInvoice('${order.id}')">
+                                <i class="fas fa-receipt"></i> Rechnung drucken
+                            </button>
+                            <button class="btn btn-both" onclick="printBothReceipts('${order.id}')">
+                                <i class="fas fa-print"></i> Beide drucken
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `<div class="orders-grid">${ordersHTML}</div>`;
+            updateStats(orders);
+        }
+
+        function getPaymentMethodText(method) {
+            const methods = {
+                'cash': '💰 Barzahlung',
+                'paypal': '💳 PayPal',
+                'card': '💳 Kreditkarte'
+            };
+            return methods[method] || method;
+        }
+
+        function updateStats(orders) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const todayOrders = orders.filter(o => new Date(o.timestamp) >= today);
+            const totalToday = todayOrders.reduce((sum, order) => {
+                const amount = parseFloat(order.total.replace('€', '').replace(',', '.').trim());
+                return sum + amount;
+            }, 0);
+
+            const deliveryCount = todayOrders.filter(o => o.deliveryMethod === 'delivery').length;
+            const pickupCount = todayOrders.filter(o => o.deliveryMethod === 'pickup').length;
+
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${todayOrders.length}</div>
+                    <div class="stat-label">Bestellungen heute</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${totalToday.toFixed(2)}€</div>
+                    <div class="stat-label">Umsatz heute</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${deliveryCount}</div>
+                    <div class="stat-label">Lieferungen</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${pickupCount}</div>
+                    <div class="stat-label">Abholungen</div>
+                </div>
+            `;
+        }
+
+        function clearAllOrders() {
+            if (confirm('Möchten Sie wirklich alle Bestellungen löschen? Dies kann nicht rückgängig gemacht werden.')) {
+                localStorage.removeItem('erfurtPizzaOrders');
+                loadOrders();
+            }
+        }
+
+        // Load orders on page load
+        loadOrders();
+
+        // Refresh orders every 30 seconds
+        setInterval(loadOrders, 30000);
+
+        console.log('%c🍕 Erfurt Pizza Admin', 'color: #dc2626; font-size: 24px; font-weight: bold;');
+    </script>
+</body>
+</html>

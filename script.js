@@ -153,7 +153,7 @@ function createMenuCard(item) {
 
     card.innerHTML = `
         <div class="menu-card__image">
-            <img src="${item.image}" alt="${item.name}" onerror="this.src='assets/placeholder.jpg'">
+            <img src="${item.image}" alt="${item.name}" onerror="this.src='assets/placeholder.svg'">
             ${badgeHTML}
         </div>
         <div class="menu-card__content">
@@ -372,7 +372,7 @@ function createCartItem(item, index) {
 
     cartItem.innerHTML = `
         <div class="cart-item__image">
-            <img src="${item.image}" alt="${item.name}" onerror="this.src='assets/placeholder.jpg'">
+            <img src="${item.image}" alt="${item.name}" onerror="this.src='assets/placeholder.svg'">
         </div>
         <div class="cart-item__info">
             <h4 class="cart-item__title">${item.name}${sizeText}</h4>
@@ -624,8 +624,8 @@ function processOrder(orderData) {
     });
     localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
 
-    // Automatically print kitchen receipt and invoice
-    printBothReceipts(orderId);
+    // Automatically print customer invoice only (kitchen receipt is for owner/admin only)
+    printInvoice(orderId);
 
     // Show confirmation
     showOrderConfirmation(orderId, orderData);
@@ -763,7 +763,7 @@ function showExtrasModal() {
     const sizeText = itemData.size ? ` (${itemData.size})` : '';
     extrasItemInfo.innerHTML = `
         <div class="extras-item-display">
-            <img src="${itemData.image}" alt="${itemData.name}" onerror="this.src='assets/placeholder.jpg'">
+            <img src="${itemData.image}" alt="${itemData.name}" onerror="this.src='assets/placeholder.svg'">
             <div>
                 <h4>${itemData.name}${sizeText}</h4>
                 <p>${getCategoryName(itemData.category)}</p>
