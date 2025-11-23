@@ -8,7 +8,7 @@ const BACKEND_URL = '/.netlify/functions'; // Netlify Functions endpoint
 const paymentConfig = {
     // PayPal Configuration
     paypal: {
-        enabled: true, // Enable when you configure PayPal in Netlify environment variables
+        enabled: false, // Enable when you configure PayPal in Netlify environment variables
         mode: 'sandbox', // 'sandbox' for testing, 'live' for production (set via PAYPAL_MODE env var)
         // Note: Client ID is only used for frontend PayPal SDK, not for API calls
         // The actual credentials are stored securely in Netlify environment variables
@@ -18,7 +18,7 @@ const paymentConfig = {
 
     // Stripe Configuration
     stripe: {
-        enabled: true, // Enable when you configure Stripe in Netlify environment variables
+        enabled: false, // Enable when you configure Stripe in Netlify environment variables
         // Note: Publishable key is safe to expose in frontend
         // The secret key is stored securely in Netlify environment variables
         currency: 'eur',
