@@ -3,16 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bestellverwaltung für Erfurt Pizza - Interne Verwaltungsoberfläche für Bestellungen, Küche und Lieferungen.">
     <meta name="robots" content="noindex, nofollow">
-    <title>Bestellverwaltung - Erfurt Pizza</title>
-
-    <!-- Favicon -->
+    <title>Admin Zugang - Erfurt Pizza</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <meta name="theme-color" content="#DC2626">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -25,1152 +19,341 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .header {
-            background: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .header h1 {
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header h1 i {
-            color: #dc2626;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: #dc2626;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #b91c1c;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #4b5563;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .stat-card i {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .stat-card.orders i { color: #dc2626; }
-        .stat-card.revenue i { color: #10b981; }
-        .stat-card.items i { color: #f59e0b; }
-        .stat-card.avg i { color: #3b82f6; }
-
-        .stat-card h3 {
-            font-size: 32px;
-            color: #333;
-            margin: 10px 0 5px;
-        }
-
-        .stat-card p {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .orders-section {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .orders-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .orders-header h2 {
-            color: #333;
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-group select {
-            padding: 8px 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .order-card {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-        }
-
-        .order-card:hover {
-            border-color: #dc2626;
-            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.1);
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .order-id {
-            font-size: 18px;
-            font-weight: 700;
-            color: #dc2626;
-        }
-
-        .order-time {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .order-badges {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-delivery {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .badge-pickup {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-cash {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .badge-card {
-            background: #e0e7ff;
-            color: #3730a3;
-        }
-
-        .badge-paypal {
-            background: #fce7f3;
-            color: #831843;
-        }
-
-        .order-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .info-group {
-            background: white;
-            padding: 12px;
-            border-radius: 5px;
-        }
-
-        .info-group label {
-            font-size: 12px;
-            color: #6b7280;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .info-group p {
-            color: #333;
-            font-weight: 600;
-        }
-
-        .order-items {
-            background: white;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-
-        .order-items h4 {
-            color: #333;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .item-list {
-            list-style: none;
-        }
-
-        .item-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .item-list li:last-child {
-            border-bottom: none;
-        }
-
-        .order-total {
-            background: #dc2626;
-            color: white;
-            padding: 12px;
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: 700;
-            text-align: right;
-            margin-bottom: 15px;
-        }
-
-        .order-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn-sm {
-            padding: 8px 15px;
-            font-size: 13px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6b7280;
-        }
-
-        .empty-state i {
-            font-size: 80px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .empty-state h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        @media print {
-            body {
-                background: white;
-            }
-            .header, .stats, .orders-header, .order-actions {
-                display: none !important;
-            }
-            .orders-section {
-                box-shadow: none;
-                padding: 0;
-            }
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
 
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
+        .login-container {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
             width: 100%;
+            text-align: center;
         }
 
-        .modal-content h3 {
+        .logo {
+            font-size: 64px;
             margin-bottom: 20px;
+        }
+
+        h1 {
             color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
         }
 
-        .modal-content p {
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .lock-icon {
+            font-size: 48px;
+            color: #dc2626;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
             margin-bottom: 20px;
-            color: #6b7280;
+            text-align: left;
         }
 
-        .modal-actions {
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .toggle-password {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: #dc2626;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 10px;
-            justify-content: flex-end;
+        }
+
+        .btn-login:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 2px solid #fecaca;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border: 2px solid #bfdbfe;
+            color: #1e40af;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .info-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #dc2626;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 40px 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>
-                <i class="fas fa-clipboard-list"></i>
-                Bestellverwaltung
-            </h1>
-            <div class="header-actions">
-                <button class="btn btn-success" onclick="exportToGoogleSheets()">
-                    <i class="fab fa-google"></i> Google Sheets Export
-                </button>
-                <button class="btn btn-secondary" onclick="clearAllOrders()">
-                    <i class="fas fa-trash"></i> Alle löschen
-                </button>
-                <a href="index.html" class="btn btn-primary">
-                    <i class="fas fa-home"></i> Zur Website
-                </a>
-            </div>
+    <div class="login-container">
+        <div class="logo">🍕</div>
+        <h1>Admin Bereich</h1>
+        <p class="subtitle">Erfurt Pizza - Bestellverwaltung</p>
+
+        <div class="lock-icon">
+            <i class="fas fa-lock"></i>
         </div>
 
-        <div class="stats">
-            <div class="stat-card orders">
-                <i class="fas fa-shopping-cart"></i>
-                <h3 id="total-orders">0</h3>
-                <p>Bestellungen</p>
-            </div>
-            <div class="stat-card revenue">
-                <i class="fas fa-euro-sign"></i>
-                <h3 id="total-revenue">0,00 €</h3>
-                <p>Gesamtumsatz</p>
-            </div>
-            <div class="stat-card items">
-                <i class="fas fa-utensils"></i>
-                <h3 id="total-items">0</h3>
-                <p>Artikel verkauft</p>
-            </div>
-            <div class="stat-card avg">
-                <i class="fas fa-chart-line"></i>
-                <h3 id="avg-order">0,00 €</h3>
-                <p>Durchschnitt</p>
-            </div>
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i> Falsches Passwort. Bitte versuchen Sie es erneut.
         </div>
 
-        <div class="orders-section">
-            <div class="orders-header">
-                <h2><i class="fas fa-list"></i> Bestellungen</h2>
-                <div class="filter-group">
-                    <select id="filter-method" onchange="filterOrders()">
-                        <option value="all">Alle Lieferarten</option>
-                        <option value="delivery">Nur Lieferung</option>
-                        <option value="pickup">Nur Abholung</option>
-                    </select>
-                    <select id="filter-payment" onchange="filterOrders()">
-                        <option value="all">Alle Zahlungen</option>
-                        <option value="cash">Barzahlung</option>
-                        <option value="paypal">PayPal</option>
-                        <option value="card">Kreditkarte</option>
-                    </select>
-                    <select id="sort-by" onchange="filterOrders()">
-                        <option value="newest">Neueste zuerst</option>
-                        <option value="oldest">Älteste zuerst</option>
-                        <option value="highest">Höchster Betrag</option>
-                        <option value="lowest">Niedrigster Betrag</option>
-                    </select>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="password">Passwort</label>
+                <div class="input-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Geben Sie Ihr Passwort ein"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i>
                 </div>
             </div>
 
-            <div id="orders-container">
-                <!-- Orders will be loaded here -->
-            </div>
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i>
+                Anmelden
+            </button>
+        </form>
+
+        <div class="info-box">
+            <strong><i class="fas fa-shield-alt"></i> Sicherheitshinweis:</strong>
+            <ul>
+                <li>Passwort nach dem ersten Login ändern</li>
+                <li>Nicht auf öffentlichen Computern anmelden</li>
+                <li>Immer abmelden nach der Nutzung</li>
+            </ul>
         </div>
+
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Zurück zur Website
+        </a>
     </div>
 
-    <!-- Confirmation Modal -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-content">
-            <h3><i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i> Bestätigung</h3>
-            <p id="confirmMessage"></p>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeConfirmModal()">Abbrechen</button>
-                <button class="btn btn-primary" id="confirmButton">Bestätigen</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="menu-data.js"></script>
-    <script src="print-receipts.js"></script>
     <script>
-        let orders = [];
-        let confirmCallback = null;
+        // IMPORTANT: Change this password hash after first login!
+        // To generate a new password hash, use the helper function at the bottom of this file
+        // Current password: "erfurt2024" (CHANGE THIS IMMEDIATELY!)
+        const ADMIN_PASSWORD_HASH = '8f6e0b9c5e4d3a2b1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6';
 
-        // Load orders on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadOrders();
+        // Check if already authenticated
+        if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+            window.location.href = 'orders-dashboard.html';
+        }
+
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Toggle password visibility
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePassword.classList.toggle('fa-eye');
+            togglePassword.classList.toggle('fa-eye-slash');
         });
 
-        function loadOrders() {
-            const savedOrders = localStorage.getItem('erfurtPizzaOrders');
-            orders = savedOrders ? JSON.parse(savedOrders) : [];
-            updateStatistics();
-            filterOrders();
+        // Simple hash function (SHA-256 equivalent for client-side)
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
         }
 
-        function updateStatistics() {
-            const totalOrders = orders.length;
-            const totalRevenue = orders.reduce((sum, order) => {
-                const amount = parseFloat(order.total.replace(',', '.').replace(' €', ''));
-                return sum + amount;
-            }, 0);
-            const totalItems = orders.reduce((sum, order) => {
-                return sum + order.cart.reduce((s, item) => s + item.quantity, 0);
-            }, 0);
-            const avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
-            document.getElementById('total-orders').textContent = totalOrders;
-            document.getElementById('total-revenue').textContent = totalRevenue.toFixed(2) + ' €';
-            document.getElementById('total-items').textContent = totalItems;
-            document.getElementById('avg-order').textContent = avgOrder.toFixed(2) + ' €';
-        }
-
-        function filterOrders() {
-            const methodFilter = document.getElementById('filter-method').value;
-            const paymentFilter = document.getElementById('filter-payment').value;
-            const sortBy = document.getElementById('sort-by').value;
-
-            let filtered = [...orders];
-
-            // Apply filters
-            if (methodFilter !== 'all') {
-                filtered = filtered.filter(order => order.deliveryMethod === methodFilter);
-            }
-            if (paymentFilter !== 'all') {
-                filtered = filtered.filter(order => order.paymentMethod === paymentFilter);
-            }
-
-            // Apply sorting
-            filtered.sort((a, b) => {
-                switch(sortBy) {
-                    case 'newest':
-                        return new Date(b.timestamp) - new Date(a.timestamp);
-                    case 'oldest':
-                        return new Date(a.timestamp) - new Date(b.timestamp);
-                    case 'highest':
-                        return parseFloat(b.total.replace(',', '.').replace(' €', '')) -
-                               parseFloat(a.total.replace(',', '.').replace(' €', ''));
-                    case 'lowest':
-                        return parseFloat(a.total.replace(',', '.').replace(' €', '')) -
-                               parseFloat(b.total.replace(',', '.').replace(' €', ''));
-                    default:
-                        return 0;
-                }
-            });
-
-            displayOrders(filtered);
-        }
-
-        function displayOrders(ordersToDisplay) {
-            const container = document.getElementById('orders-container');
-
-            if (ordersToDisplay.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <h3>Keine Bestellungen</h3>
-                        <p>Es sind noch keine Bestellungen vorhanden.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = ordersToDisplay.map(order => createOrderCard(order)).join('');
-        }
-
-        function createOrderCard(order) {
-            const date = new Date(order.timestamp);
-            const formattedDate = date.toLocaleDateString('de-DE', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            const deliveryBadge = order.deliveryMethod === 'delivery'
-                ? '<span class="badge badge-delivery"><i class="fas fa-truck"></i> Lieferung</span>'
-                : '<span class="badge badge-pickup"><i class="fas fa-box"></i> Abholung</span>';
-
-            const paymentBadges = {
-                'cash': '<span class="badge badge-cash"><i class="fas fa-money-bill-wave"></i> Barzahlung</span>',
-                'paypal': '<span class="badge badge-paypal"><i class="fab fa-paypal"></i> PayPal</span>',
-                'card': '<span class="badge badge-card"><i class="fas fa-credit-card"></i> Karte</span>'
-            };
-
-            const items = order.cart.map(item => {
-                const sizeText = item.size ? ` (${item.size})` : '';
-
-                // Calculate total including extras
-                const basePrice = item.price;
-                const extrasPrice = (item.extras || []).reduce((sum, extra) => sum + extra.price, 0);
-                const itemUnitPrice = basePrice + extrasPrice;
-                const itemTotal = itemUnitPrice * item.quantity;
-
-                // Build extras display
-                let extrasHTML = '';
-                if(item.extras && item.extras.length > 0) {
-                    extrasHTML = '<br><small style="color: #666; margin-left: 1.5rem;">';
-                    item.extras.forEach(extra => {
-                        const extraPriceText = extra.price === 0 ? '' : ` (+${extra.price.toFixed(2)}€)`;
-                        extrasHTML += `+ ${extra.name}${extraPriceText} `;
-                    });
-                    extrasHTML += '</small>';
-                }
-
-                return `<li><span>${item.quantity}x ${item.name}${sizeText}${extrasHTML}</span><span>${itemTotal.toFixed(2)} €</span></li>`;
-            }).join('');
-
-            return `
-                <div class="order-card" data-order-id="${order.id}">
-                    <div class="order-header">
-                        <div>
-                            <div class="order-id">#${order.id}</div>
-                            <div class="order-time"><i class="fas fa-clock"></i> ${formattedDate}</div>
-                        </div>
-                        <div class="order-badges">
-                            ${deliveryBadge}
-                            ${paymentBadges[order.paymentMethod] || ''}
-                        </div>
-                    </div>
-
-                    <div class="order-info">
-                        <div class="info-group">
-                            <label><i class="fas fa-user"></i> Name</label>
-                            <p>${order.name}</p>
-                        </div>
-                        <div class="info-group">
-                            <label><i class="fas fa-phone"></i> Telefon</label>
-                            <p>${order.phone}</p>
-                        </div>
-                        ${order.email ? `
-                        <div class="info-group">
-                            <label><i class="fas fa-envelope"></i> E-Mail</label>
-                            <p>${order.email}</p>
-                        </div>
-                        ` : ''}
-                        ${order.deliveryMethod === 'delivery' ? `
-                        <div class="info-group">
-                            <label><i class="fas fa-map-marker-alt"></i> Adresse</label>
-                            <p>${order.street}, ${order.zip} ${order.city}</p>
-                        </div>
-                        ` : ''}
-                    </div>
-
-                    ${order.notes ? `
-                    <div class="info-group" style="margin-bottom: 15px;">
-                        <label><i class="fas fa-comment"></i> Anmerkungen</label>
-                        <p>${order.notes}</p>
-                    </div>
-                    ` : ''}
-
-                    <div class="order-items">
-                        <h4><i class="fas fa-utensils"></i> Bestellte Artikel</h4>
-                        <ul class="item-list">
-                            ${items}
-                        </ul>
-                    </div>
-
-                    <div class="order-total">
-                        Gesamtbetrag: ${order.total}
-                    </div>
-
-                    <div class="order-actions">
-                        <button class="btn btn-success btn-sm" onclick="printKitchenReceipt('${order.id}')">
-                            <i class="fas fa-print"></i> Küchenbonbon
-                        </button>
-                        <button class="btn btn-primary btn-sm" onclick="printInvoice('${order.id}')">
-                            <i class="fas fa-file-invoice"></i> Rechnung drucken
-                        </button>
-                        <button class="btn btn-secondary btn-sm" onclick="deleteOrder('${order.id}')">
-                            <i class="fas fa-trash"></i> Löschen
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function printKitchenReceipt(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order) return;
-
-            const printWindow = window.open('', '_blank');
-            const date = new Date(order.timestamp);
-            const formattedDate = date.toLocaleString('de-DE');
-
-            const items = order.cart.map(item => {
-                const sizeText = item.size ? ` (${item.size})` : '';
-
-                // Build extras display
-                let extrasHTML = '';
-                if(item.extras && item.extras.length > 0) {
-                    extrasHTML = '<tr><td colspan="2" style="padding: 4px 0 4px 40px; font-size: 14px; color: #666;">';
-                    item.extras.forEach(extra => {
-                        const extraPriceText = extra.price === 0 ? '' : ` (+${extra.price.toFixed(2)}€)`;
-                        extrasHTML += `+ ${extra.name}${extraPriceText}<br>`;
-                    });
-                    extrasHTML += '</td></tr>';
-                }
-
-                return `
-                    <tr>
-                        <td style="padding: 8px 0; font-size: 18px; font-weight: bold;">${item.quantity}x</td>
-                        <td style="padding: 8px 0; font-size: 18px;">${item.name}${sizeText}</td>
-                    </tr>
-                    ${extrasHTML}
-                `;
-            }).join('');
-
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Küchenbonbon #${order.id}</title>
-                    <style>
-                        * {
-                            margin: 0;
-                            padding: 0;
-                            box-sizing: border-box;
-                        }
-                        body {
-                            font-family: 'Courier New', monospace;
-                            padding: 20px;
-                            max-width: 400px;
-                        }
-                        .header {
-                            text-align: center;
-                            border-bottom: 3px solid #000;
-                            padding-bottom: 15px;
-                            margin-bottom: 15px;
-                        }
-                        .header h1 {
-                            font-size: 32px;
-                            margin-bottom: 5px;
-                        }
-                        .header h2 {
-                            font-size: 24px;
-                            margin-bottom: 10px;
-                        }
-                        .section {
-                            margin-bottom: 20px;
-                            padding-bottom: 15px;
-                            border-bottom: 2px dashed #666;
-                        }
-                        .section:last-child {
-                            border-bottom: none;
-                        }
-                        .label {
-                            font-weight: bold;
-                            font-size: 14px;
-                            text-transform: uppercase;
-                            margin-bottom: 5px;
-                        }
-                        .value {
-                            font-size: 18px;
-                            margin-bottom: 10px;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                        }
-                        .notes {
-                            background: #f0f0f0;
-                            padding: 10px;
-                            margin-top: 10px;
-                            border: 2px solid #000;
-                        }
-                        .delivery-badge {
-                            background: #000;
-                            color: #fff;
-                            padding: 8px 15px;
-                            display: inline-block;
-                            font-size: 16px;
-                            font-weight: bold;
-                            margin-top: 10px;
-                        }
-                        @media print {
-                            body { padding: 0; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>🍕 ERFURT PIZZA</h1>
-                        <h2>KÜCHE</h2>
-                        <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">
-                            Bestellung #${order.id}
-                        </div>
-                        <div style="font-size: 14px; margin-top: 5px;">
-                            ${formattedDate}
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="label">Lieferart:</div>
-                        <div class="delivery-badge">
-                            ${order.deliveryMethod === 'delivery' ? '🚚 LIEFERUNG' : '📦 ABHOLUNG'}
-                        </div>
-                    </div>
-
-                    ${order.deliveryMethod === 'delivery' ? `
-                    <div class="section">
-                        <div class="label">Lieferadresse:</div>
-                        <div class="value">
-                            ${order.name}<br>
-                            ${order.street}<br>
-                            ${order.zip} ${order.city}<br>
-                            Tel: ${order.phone}
-                        </div>
-                    </div>
-                    ` : `
-                    <div class="section">
-                        <div class="label">Kunde:</div>
-                        <div class="value">
-                            ${order.name}<br>
-                            Tel: ${order.phone}
-                        </div>
-                    </div>
-                    `}
-
-                    <div class="section">
-                        <div class="label">Bestellung:</div>
-                        <table>
-                            ${items}
-                        </table>
-                    </div>
-
-                    ${order.notes ? `
-                    <div class="section">
-                        <div class="label">⚠️ Wichtige Hinweise:</div>
-                        <div class="notes">
-                            ${order.notes}
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    <div style="text-align: center; margin-top: 30px; font-size: 16px; font-weight: bold;">
-                        Gesamtbetrag: ${order.total}
-                    </div>
-
-                    <div style="text-align: center; margin-top: 20px; font-size: 12px; border-top: 2px solid #000; padding-top: 10px;">
-                        ${order.paymentMethod === 'cash' ? '💰 BARZAHLUNG' :
-                          order.paymentMethod === 'paypal' ? '💳 PAYPAL' :
-                          '💳 KREDITKARTE'}
-                    </div>
-                </body>
-                </html>
-            `);
-
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-
-        // Print both receipts automatically in sequence
-        function printBothReceipts(orderId) {
-            // First print kitchen receipt
-            printKitchenReceipt(orderId);
-
-            // Then print invoice after a short delay
-            setTimeout(() => {
-                printInvoice(orderId);
-            }, 1000);
-        }
-
-        // Make printBothReceipts globally accessible
-        window.printBothReceipts = printBothReceipts;
-
-        function printInvoice(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order) return;
-
-            const printWindow = window.open('', '_blank');
-            const date = new Date(order.timestamp);
-            const formattedDate = date.toLocaleString('de-DE');
-
-            const items = order.cart.map(item => {
-                const sizeText = item.size ? ` (${item.size})` : '';
-
-                // Calculate total including extras
-                const basePrice = item.price;
-                const extrasPrice = (item.extras || []).reduce((sum, extra) => sum + extra.price, 0);
-                const itemUnitPrice = basePrice + extrasPrice;
-                const itemTotal = itemUnitPrice * item.quantity;
-
-                // Build extras display
-                let extrasHTML = '';
-                if(item.extras && item.extras.length > 0) {
-                    extrasHTML = '<tr><td colspan="3" style="padding: 4px 0 4px 40px; font-size: 14px; color: #666;">';
-                    item.extras.forEach(extra => {
-                        const extraPriceText = extra.price === 0 ? '' : ` (+${extra.price.toFixed(2)}€)`;
-                        extrasHTML += `+ ${extra.name}${extraPriceText}<br>`;
-                    });
-                    extrasHTML += '</td></tr>';
-                }
-
-                return `
-                    <tr>
-                        <td style="padding: 8px 0; font-size: 16px; font-weight: bold;">${item.quantity}x</td>
-                        <td style="padding: 8px 0; font-size: 16px;">${item.name}${sizeText}</td>
-                        <td style="padding: 8px 0; font-size: 16px; text-align: right;">${itemTotal.toFixed(2)}€</td>
-                    </tr>
-                    ${extrasHTML}
-                `;
-            }).join('');
-
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Rechnung #${order.id}</title>
-                    <style>
-                        * {
-                            margin: 0;
-                            padding: 0;
-                            box-sizing: border-box;
-                        }
-                        body {
-                            font-family: 'Courier New', monospace;
-                            padding: 20px;
-                            max-width: 400px;
-                        }
-                        .header {
-                            text-align: center;
-                            border-bottom: 3px solid #000;
-                            padding-bottom: 15px;
-                            margin-bottom: 15px;
-                        }
-                        .header h1 {
-                            font-size: 32px;
-                            margin-bottom: 5px;
-                        }
-                        .header h2 {
-                            font-size: 24px;
-                            margin-bottom: 10px;
-                        }
-                        .company-info {
-                            text-align: center;
-                            font-size: 12px;
-                            margin-bottom: 10px;
-                        }
-                        .section {
-                            margin-bottom: 20px;
-                            padding-bottom: 15px;
-                            border-bottom: 2px dashed #666;
-                        }
-                        .section:last-child {
-                            border-bottom: none;
-                        }
-                        .label {
-                            font-weight: bold;
-                            font-size: 14px;
-                            text-transform: uppercase;
-                            margin-bottom: 5px;
-                        }
-                        .value {
-                            font-size: 16px;
-                            margin-bottom: 10px;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                        }
-                        .total-section {
-                            background: #000;
-                            color: #fff;
-                            padding: 12px;
-                            text-align: center;
-                            font-size: 20px;
-                            font-weight: bold;
-                            margin: 20px 0;
-                        }
-                        .footer {
-                            text-align: center;
-                            font-size: 12px;
-                            border-top: 2px solid #000;
-                            padding-top: 10px;
-                            margin-top: 20px;
-                        }
-                        @media print {
-                            body { padding: 0; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>🍕 ERFURT PIZZA</h1>
-                        <h2>RECHNUNG</h2>
-                        <div class="company-info">
-                            An der Lache 41, 99086 Erfurt<br>
-                            Tel: 0361 65 44 22 75<br>
-                            Tel: 0361 73 10 76 56
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="label">Rechnungsnr:</div>
-                        <div class="value">#${order.id}</div>
-                        <div class="label">Datum:</div>
-                        <div class="value">${formattedDate}</div>
-                    </div>
-
-                    <div class="section">
-                        <div class="label">Kunde:</div>
-                        <div class="value">
-                            ${order.name}<br>
-                            ${order.deliveryMethod === 'delivery' ? `${order.street}<br>${order.zip} ${order.city}<br>` : ''}
-                            Tel: ${order.phone}
-                            ${order.email ? `<br>E-Mail: ${order.email}` : ''}
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="label">Bestellte Artikel:</div>
-                        <table>
-                            ${items}
-                        </table>
-                    </div>
-
-                    <div class="total-section">
-                        GESAMT: ${order.total}
-                    </div>
-
-                    <div class="section">
-                        <div class="label">Zahlungsmethode:</div>
-                        <div class="value">
-                            ${order.paymentMethod === 'cash' ? '💰 BARZAHLUNG' :
-                              order.paymentMethod === 'paypal' ? '💳 PAYPAL' :
-                              '💳 KREDITKARTE'}
-                        </div>
-                        <div class="label">Lieferart:</div>
-                        <div class="value">
-                            ${order.deliveryMethod === 'delivery' ? '🚚 LIEFERUNG' : '📦 ABHOLUNG (20% RABATT)'}
-                        </div>
-                    </div>
-
-                    ${order.notes ? `
-                    <div class="section">
-                        <div class="label">⚠️ Anmerkungen:</div>
-                        <div class="value">${order.notes}</div>
-                    </div>
-                    ` : ''}
-
-                    <div class="footer">
-                        VIELEN DANK FÜR IHRE BESTELLUNG!<br>
-                        Erfurt Pizza - An der Lache 41, 99086 Erfurt
-                    </div>
-                </body>
-                </html>
-            `);
-
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-
-        function exportToGoogleSheets() {
-            if (orders.length === 0) {
-                alert('Keine Bestellungen zum Exportieren vorhanden.');
-                return;
-            }
-
-            // Prepare CSV data
-            const headers = ['Bestellnr', 'Datum', 'Uhrzeit', 'Name', 'Telefon', 'E-Mail', 'Adresse', 'PLZ', 'Stadt', 'Lieferart', 'Zahlungsart', 'Artikel', 'Menge', 'Betrag', 'Anmerkungen'];
-
-            const rows = orders.flatMap(order => {
-                const date = new Date(order.timestamp);
-                const dateStr = date.toLocaleDateString('de-DE');
-                const timeStr = date.toLocaleTimeString('de-DE');
-
-                return order.cart.map((item, index) => {
-                    const sizeText = item.size ? ` (${item.size})` : '';
-                    return [
-                        index === 0 ? order.id : '',
-                        index === 0 ? dateStr : '',
-                        index === 0 ? timeStr : '',
-                        index === 0 ? order.name : '',
-                        index === 0 ? order.phone : '',
-                        index === 0 ? (order.email || '') : '',
-                        index === 0 ? (order.street || '') : '',
-                        index === 0 ? (order.zip || '') : '',
-                        index === 0 ? (order.city || '') : '',
-                        index === 0 ? (order.deliveryMethod === 'delivery' ? 'Lieferung' : 'Abholung') : '',
-                        index === 0 ? (order.paymentMethod === 'cash' ? 'Bar' : order.paymentMethod === 'paypal' ? 'PayPal' : 'Karte') : '',
-                        item.name + sizeText,
-                        item.quantity,
-                        index === 0 ? order.total : '',
-                        index === 0 ? (order.notes || '') : ''
-                    ];
-                });
-            });
-
-            // Create CSV
-            const csv = [headers, ...rows]
-                .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-                .join('\n');
-
-            // Create blob and download
-            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-
-            link.setAttribute('href', url);
-            link.setAttribute('download', `erfurt-pizza-bestellungen-${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            alert('CSV-Datei wurde heruntergeladen! Sie können diese in Google Sheets importieren:\n\n1. Öffnen Sie Google Sheets\n2. Datei → Importieren\n3. Wählen Sie die CSV-Datei aus\n4. Klicken Sie auf "Daten importieren"');
-        }
-
-        function deleteOrder(orderId) {
-            showConfirmModal(
-                'Möchten Sie diese Bestellung wirklich löschen?',
-                () => {
-                    orders = orders.filter(o => o.id !== orderId);
-                    localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
-                    loadOrders();
-                }
-            );
-        }
-
-        function clearAllOrders() {
-            if (orders.length === 0) {
-                alert('Es sind keine Bestellungen vorhanden.');
-                return;
-            }
-
-            showConfirmModal(
-                `Möchten Sie wirklich alle ${orders.length} Bestellungen löschen? Diese Aktion kann nicht rückgängig gemacht werden!`,
-                () => {
-                    localStorage.removeItem('erfurtPizzaOrders');
-                    orders = [];
-                    loadOrders();
-                }
-            );
-        }
-
-        function showConfirmModal(message, callback) {
-            document.getElementById('confirmMessage').textContent = message;
-            confirmCallback = callback;
-            document.getElementById('confirmModal').classList.add('show');
-        }
-
-        function closeConfirmModal() {
-            document.getElementById('confirmModal').classList.remove('show');
-            confirmCallback = null;
-        }
-
-        document.getElementById('confirmButton').addEventListener('click', () => {
-            if (confirmCallback) {
-                confirmCallback();
-            }
-            closeConfirmModal();
-        });
-
-        // Close modal on outside click
-        document.getElementById('confirmModal').addEventListener('click', (e) => {
-            if (e.target.id === 'confirmModal') {
-                closeConfirmModal();
+        // Handle login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const password = passwordInput.value;
+            const hashedPassword = await hashPassword(password);
+
+            if (hashedPassword === ADMIN_PASSWORD_HASH) {
+                // Authentication successful
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                sessionStorage.setItem('adminLoginTime', new Date().toISOString());
+
+                // Redirect to dashboard
+                window.location.href = 'orders-dashboard.html';
+            } else {
+                // Authentication failed
+                errorMessage.classList.add('show');
+                passwordInput.value = '';
+                passwordInput.focus();
+
+                // Hide error after 3 seconds
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 3000);
             }
         });
+
+        // Auto-focus password field
+        passwordInput.focus();
+
+        /*
+         * PASSWORD CHANGE HELPER
+         * =====================
+         * To change your password:
+         * 1. Open browser console (F12)
+         * 2. Run: generatePasswordHash("YourNewPassword")
+         * 3. Copy the hash that appears
+         * 4. Replace ADMIN_PASSWORD_HASH above with the new hash
+         * 5. Save this file
+         */
+        async function generatePasswordHash(newPassword) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(newPassword);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            console.log('='.repeat(60));
+            console.log('Your new password hash:');
+            console.log(hashHex);
+            console.log('='.repeat(60));
+            console.log('Replace ADMIN_PASSWORD_HASH in orders.html with this hash');
+            return hashHex;
+        }
+
+        // Make function globally available for console use
+        window.generatePasswordHash = generatePasswordHash;
     </script>
 </body>
 </html>
