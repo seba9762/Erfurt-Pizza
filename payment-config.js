@@ -1,34 +1,31 @@
 /*==================== PAYMENT CONFIGURATION ====================*/
 
-// Backend API URL (update this when you set up your backend)
-const BACKEND_URL = 'http://localhost:3000'; // Change to your backend URL in production
-// Examples:
-// Local development: 'http://localhost:3000'
-// Production: 'https://api.erfurtpizza.com'
-// Heroku: 'https://erfurt-pizza-backend.herokuapp.com'
+// Backend API URL - using Netlify Functions
+const BACKEND_URL = '/.netlify/functions'; // Netlify Functions endpoint
+// No need to change this - Netlify Functions are automatically available at /.netlify/functions
 
 // Payment Gateway Configuration
 const paymentConfig = {
     // PayPal Configuration
     paypal: {
-        enabled: false, // Set to true when you have PayPal credentials
-        mode: 'sandbox', // 'sandbox' for testing, 'live' for production
-        clientId: 'YOUR_PAYPAL_CLIENT_ID', // Replace with your PayPal Client ID
-        // Get credentials from: https://developer.paypal.com/dashboard/
+        enabled: true, // Enable when you configure PayPal in Netlify environment variables
+        mode: 'sandbox', // 'sandbox' for testing, 'live' for production (set via PAYPAL_MODE env var)
+        // Note: Client ID is only used for frontend PayPal SDK, not for API calls
+        // The actual credentials are stored securely in Netlify environment variables
         currency: 'EUR',
         locale: 'de_DE'
     },
 
     // Stripe Configuration
     stripe: {
-        enabled: false, // Set to true when you have Stripe credentials
-        publishableKey: 'YOUR_STRIPE_PUBLISHABLE_KEY', // Replace with your Stripe Publishable Key
-        // Get credentials from: https://dashboard.stripe.com/apikeys
+        enabled: true, // Enable when you configure Stripe in Netlify environment variables
+        // Note: Publishable key is safe to expose in frontend
+        // The secret key is stored securely in Netlify environment variables
         currency: 'eur',
         locale: 'de'
     },
 
-    // Return URLs (Update these with your actual domain)
+    // Return URLs (Auto-configured based on current origin)
     returnUrls: {
         success: window.location.origin + '/payment-success.html',
         cancel: window.location.origin + '/payment-cancel.html',
@@ -38,19 +35,8 @@ const paymentConfig = {
 
 /*==================== HELPER FUNCTIONS ====================*/
 
-// Check if backend server is available
-async function checkBackendAvailable() {
-    try {
-        const response = await fetch(`${BACKEND_URL}/health`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        });
-        return response.ok;
-    } catch (error) {
-        console.log('Backend not available, using demo mode');
-        return false;
-    }
-}
+// Netlify Functions are always available when deployed
+// No need to check backend availability anymore
 
 /*==================== PAYPAL INTEGRATION ====================*/
 
@@ -82,45 +68,34 @@ async function processPayPalPayment(orderData) {
         // Store order data temporarily
         sessionStorage.setItem('pendingOrder', JSON.stringify(orderData));
 
-        // Check if backend is available
-        const useBackend = await checkBackendAvailable();
+        // Call Netlify Function to create PayPal order
+        console.log('Creating PayPal order via Netlify Function...');
 
-        if (useBackend) {
-            // PRODUCTION MODE: Use real backend
-            console.log('Using backend for PayPal payment');
+        const response = await fetch(`${BACKEND_URL}/create-paypal-order`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orderData: orderData })
+        });
 
-            const response = await fetch(`${BACKEND_URL}/api/create-paypal-order`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ orderData: orderData })
-            });
+        const data = await response.json();
 
-            const data = await response.json();
-
-            if (data.success && data.approvalUrl) {
-                // Store PayPal order ID
-                sessionStorage.setItem('paypalOrderId', data.orderId);
-                // Redirect to PayPal
-                window.location.href = data.approvalUrl;
-            } else {
-                alert('Fehler bei der PayPal-Zahlung: ' + (data.error || 'Unbekannter Fehler'));
-                return false;
-            }
+        if (data.success && data.approvalUrl) {
+            // Store PayPal order ID
+            sessionStorage.setItem('paypalOrderId', data.orderId);
+            // Redirect to PayPal
+            window.location.href = data.approvalUrl;
         } else {
-            // DEMO MODE: Simulate payment flow
-            console.log('Backend not available - using demo mode');
-            window.location.href = 'payment-processing.html?method=paypal';
+            alert('Fehler bei der PayPal-Zahlung: ' + (data.error || 'Unbekannter Fehler'));
+            return false;
         }
 
         return true;
     } catch (error) {
         console.error('PayPal payment error:', error);
-        // Fallback to demo mode if backend fails
-        console.log('Falling back to demo mode');
-        window.location.href = 'payment-processing.html?method=paypal';
-        return true;
+        alert('Fehler bei der PayPal-Zahlung. Bitte versuchen Sie es später erneut.');
+        return false;
     }
 }
 
@@ -156,43 +131,32 @@ async function processStripePayment(orderData) {
         // Store order data temporarily
         sessionStorage.setItem('pendingOrder', JSON.stringify(orderData));
 
-        // Check if backend is available
-        const useBackend = await checkBackendAvailable();
+        // Call Netlify Function to create Stripe checkout session
+        console.log('Creating Stripe checkout session via Netlify Function...');
 
-        if (useBackend) {
-            // PRODUCTION MODE: Use real backend
-            console.log('Using backend for Stripe payment');
+        const response = await fetch(`${BACKEND_URL}/create-stripe-session`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orderData: orderData })
+        });
 
-            const response = await fetch(`${BACKEND_URL}/api/create-stripe-session`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ orderData: orderData })
-            });
+        const data = await response.json();
 
-            const data = await response.json();
-
-            if (data.success && data.url) {
-                // Redirect to Stripe Checkout
-                window.location.href = data.url;
-            } else {
-                alert('Fehler bei der Kreditkarten-Zahlung: ' + (data.error || 'Unbekannter Fehler'));
-                return false;
-            }
+        if (data.success && data.url) {
+            // Redirect to Stripe Checkout
+            window.location.href = data.url;
         } else {
-            // DEMO MODE: Simulate payment flow
-            console.log('Backend not available - using demo mode');
-            window.location.href = 'payment-processing.html?method=stripe';
+            alert('Fehler bei der Kreditkarten-Zahlung: ' + (data.error || 'Unbekannter Fehler'));
+            return false;
         }
 
         return true;
     } catch (error) {
         console.error('Stripe payment error:', error);
-        // Fallback to demo mode if backend fails
-        console.log('Falling back to demo mode');
-        window.location.href = 'payment-processing.html?method=stripe';
-        return true;
+        alert('Fehler bei der Kreditkarten-Zahlung. Bitte versuchen Sie es später erneut.');
+        return false;
     }
 }
 

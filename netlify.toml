@@ -5,6 +5,18 @@
   # No build command needed for a static HTML site
   command = ""
 
+[functions]
+  # Directory where Netlify Functions are stored
+  directory = "netlify/functions"
+
+  # Node version for functions
+  node_bundler = "esbuild"
+
+  # Function settings
+  [functions."*"]
+    # 10 second timeout for all functions
+    timeout = 10
+
 [[redirects]]
   # Redirect www to non-www
   from = "https://www.erfurtpizza.com/*"

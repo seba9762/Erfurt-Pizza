@@ -607,37 +607,108 @@ checkoutForm?.addEventListener('submit', (e) => {
     handlePaymentSubmit(formData);
 });
 
-// Process order
-function processOrder(orderData) {
-    // Here you would normally send the order to your backend
-    // For now, we'll simulate the order and show confirmation
+// Process order - Save to Supabase via Netlify Functions
+async function processOrder(orderData) {
+    console.log('Saving order to database...', orderData);
 
-    console.log('Order placed:', orderData);
+    try {
+        // Prepare order data for API
+        const apiOrderData = {
+            name: orderData.name,
+            email: orderData.email || null,
+            phone: orderData.phone,
+            address: `${orderData.street || orderData.address || ''}`,
+            city: orderData.city || '',
+            zip: orderData.zip || '',
+            notes: orderData.notes || '',
+            deliveryType: orderData.deliveryMethod || orderData.deliveryType || 'delivery',
+            paymentMethod: orderData.paymentMethod || 'cash',
+            cart: orderData.cart,
+            total: orderData.total
+        };
 
-    // Save order to localStorage (for demo purposes)
-    const orders = JSON.parse(localStorage.getItem('erfurtPizzaOrders') || '[]');
-    const orderId = 'EP' + Date.now();
-    orders.push({
-        id: orderId,
-        ...orderData,
-        timestamp: new Date().toISOString()
-    });
-    localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
+        // Save order to Supabase via Netlify Function
+        const response = await fetch('/.netlify/functions/save-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderData: apiOrderData,
+                paymentId: orderData.paymentId || null,
+                paymentMethod: orderData.paymentMethod || 'cash'
+            })
+        });
 
-    // Automatically print kitchen receipt and customer invoice for kitchen
-    // Kitchen gets both: kitchen receipt for preparation + customer invoice for records
-    printBothReceipts(orderId);
+        const result = await response.json();
 
-    // Show confirmation
-    showOrderConfirmation(orderId, orderData);
+        if (result.success && result.orderId) {
+            const orderId = result.orderId;
+            console.log('Order saved successfully:', orderId);
 
-    // Clear cart
-    cart = [];
-    saveCartToStorage();
-    updateCartUI();
+            // Also save to localStorage as backup (for offline access to order history)
+            const orders = JSON.parse(localStorage.getItem('erfurtPizzaOrders') || '[]');
+            orders.push({
+                id: orderId,
+                ...orderData,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
 
-    // Close checkout
-    checkoutModal.classList.remove('show');
+            // Automatically print kitchen receipt and customer invoice for kitchen
+            // Kitchen gets both: kitchen receipt for preparation + customer invoice for records
+            if (typeof printBothReceipts === 'function') {
+                printBothReceipts(orderId);
+            }
+
+            // Show confirmation
+            showOrderConfirmation(orderId, orderData);
+
+            // Clear cart
+            cart = [];
+            saveCartToStorage();
+            updateCartUI();
+
+            // Close checkout
+            if (checkoutModal) {
+                checkoutModal.classList.remove('show');
+            }
+
+            return orderId;
+        } else {
+            throw new Error(result.error || 'Failed to save order');
+        }
+    } catch (error) {
+        console.error('Error saving order:', error);
+
+        // Fallback: save to localStorage only
+        console.warn('Saving order to localStorage as fallback');
+        const orders = JSON.parse(localStorage.getItem('erfurtPizzaOrders') || '[]');
+        const orderId = 'EP' + Date.now();
+        orders.push({
+            id: orderId,
+            ...orderData,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
+
+        // Show confirmation even if database save failed
+        showOrderConfirmation(orderId, orderData);
+
+        // Clear cart
+        cart = [];
+        saveCartToStorage();
+        updateCartUI();
+
+        // Close checkout
+        if (checkoutModal) {
+            checkoutModal.classList.remove('show');
+        }
+
+        alert('Hinweis: Ihre Bestellung wurde gespeichert, aber möglicherweise nicht an die Datenbank übermittelt. Bitte kontaktieren Sie uns, um die Bestellung zu bestätigen.');
+
+        return orderId;
+    }
 }
 
 /*==================== ORDER CONFIRMATION ====================*/
