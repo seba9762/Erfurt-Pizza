@@ -101,10 +101,10 @@ menuFilters.forEach(filter => {
 function loadMenuItems(filter) {
     menuItemsContainer.innerHTML = '';
 
-    let filteredItems = menuData;
+    let filteredItems = window.menuData || [];
 
     if(filter !== 'all') {
-        filteredItems = menuData.filter(item => item.tags.includes(filter));
+        filteredItems = (window.menuData || []).filter(item => item.tags.includes(filter));
     }
 
     filteredItems.forEach(item => {
@@ -234,7 +234,7 @@ cartModal?.addEventListener('click', (e) => {
 
 // Add to cart function - now shows extras modal first
 function addToCart(itemId, button) {
-    const item = menuData.find(i => i.id === itemId);
+    const item = (window.menuData || []).find(i => i.id === itemId);
     if(!item) return;
 
     const card = button.closest('.menu-card');
@@ -440,11 +440,11 @@ function updateCartTotals() {
 
     // Check delivery method
     const deliveryMethod = document.querySelector('input[name="delivery"]:checked')?.value;
-    let deliveryFee = deliveryMethod === 'delivery' ? deliveryInfo.fee : 0;
-    let discount = deliveryMethod === 'pickup' ? subtotal * deliveryInfo.pickupDiscount : 0;
+    let deliveryFee = deliveryMethod === 'delivery' ? (window.deliveryInfo?.fee || 2.00) : 0;
+    let discount = deliveryMethod === 'pickup' ? subtotal * (window.deliveryInfo?.pickupDiscount || 0.20) : 0;
 
     // Free delivery for orders over threshold
-    if(deliveryMethod === 'delivery' && subtotal >= deliveryInfo.freeDeliveryFrom) {
+    if(deliveryMethod === 'delivery' && subtotal >= (window.deliveryInfo?.freeDeliveryFrom || 25.00)) {
         deliveryFee = 0;
     }
 
@@ -573,10 +573,10 @@ function updateCheckoutSummary() {
         const itemUnitPrice = basePrice + extrasPrice;
         return sum + (itemUnitPrice * item.quantity);
     }, 0);
-    let deliveryFee = deliveryMethod === 'delivery' ? deliveryInfo.fee : 0;
-    let discount = deliveryMethod === 'pickup' ? subtotal * deliveryInfo.pickupDiscount : 0;
+    let deliveryFee = deliveryMethod === 'delivery' ? (window.deliveryInfo?.fee || 2.00) : 0;
+    let discount = deliveryMethod === 'pickup' ? subtotal * (window.deliveryInfo?.pickupDiscount || 0.20) : 0;
 
-    if(deliveryMethod === 'delivery' && subtotal >= deliveryInfo.freeDeliveryFrom) {
+    if(deliveryMethod === 'delivery' && subtotal >= (window.deliveryInfo?.freeDeliveryFrom || 25.00)) {
         deliveryFee = 0;
     }
 
@@ -861,7 +861,7 @@ function populateExtrasList(itemData) {
     extrasList.innerHTML = '';
 
     // Filter extras based on category
-    let availableExtras = [...extras];
+    let availableExtras = [...(window.extras || [])];
 
     // For non-pizza items, filter out pizza-specific extras
     if(itemData.category !== 'pizza') {

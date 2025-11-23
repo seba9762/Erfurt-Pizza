@@ -1,7 +1,8 @@
 // Menu Database for Erfurt Pizza - Complete Menu
 // Based on official menu cards
 
-const menuData = [
+// Make menuData global by assigning to window
+window.menuData = [
     // ===== PIZZA (Regular) =====
     {
         id: 1,
@@ -1227,7 +1228,7 @@ const menuData = [
 ];
 
 // Extra items and add-ons
-const extras = [
+window.extras = [
     { name: "Extra Käse", price: 1.50 },
     { name: "Extra Salami", price: 2.00 },
     { name: "Extra Schinken", price: 2.00 },
@@ -1242,7 +1243,7 @@ const extras = [
 ];
 
 // Delivery information
-const deliveryInfo = {
+window.deliveryInfo = {
     fee: 2.00,
     pickupDiscount: 0.20, // 20% discount
     minOrder: 10.00,
