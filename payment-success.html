@@ -190,12 +190,12 @@
             <p><strong>✓</strong> Bei Fragen erreichen Sie uns unter: <strong>0361 65 44 22 75</strong></p>
         </div>
 
-        <div>
+        <div id="action-buttons">
             <a href="index.html" class="btn">
                 <i class="fas fa-home"></i> Zurück zur Startseite
             </a>
-            <a href="orders.html" class="btn btn-secondary">
-                <i class="fas fa-receipt"></i> Meine Bestellungen
+            <a href="#" id="view-order-btn" class="btn btn-secondary">
+                <i class="fas fa-receipt"></i> Meine Bestellung ansehen
             </a>
         </div>
     </div>
@@ -236,6 +236,12 @@
                         <i class="fas fa-hashtag"></i> Bestellnummer: <strong>${orderId}</strong>
                     `;
 
+                    // Update "View Order" button link
+                    const viewOrderBtn = document.getElementById('view-order-btn');
+                    if (viewOrderBtn) {
+                        viewOrderBtn.href = `my-order.html?orderId=${orderId}`;
+                    }
+
                     // Clear pending order
                     sessionStorage.removeItem('pendingOrder');
 
@@ -250,6 +256,9 @@
                             Fehler bei der Bestellverarbeitung
                         </span>
                     `;
+                    // Still clear cart and pending order even on error
+                    sessionStorage.removeItem('pendingOrder');
+                    localStorage.removeItem('erfurtPizzaCart');
                 }
             } else {
                 // No pending order
@@ -259,6 +268,8 @@
                         Keine ausstehende Bestellung
                     </span>
                 `;
+                // Clear cart anyway since user is on payment success page
+                localStorage.removeItem('erfurtPizzaCart');
             }
         });
     </script>

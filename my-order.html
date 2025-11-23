@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Bestellung - Erfurt Pizza</title>
+    <link rel="icon" href="assets/pizza-icon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #dc2626;
+            --success-color: #28a745;
+            --dark-color: #1a1a1a;
+            --light-color: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .header h1 {
+            color: var(--dark-color);
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header h1 i {
+            color: var(--primary-color);
+        }
+
+        .order-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+            padding: 12px 25px;
+            border-radius: 50px;
+            margin: 15px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .order-id-section {
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .order-id-section h2 {
+            color: var(--dark-color);
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .order-id {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .order-time {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--light-color);
+            border-radius: 10px;
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 i {
+            color: var(--primary-color);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .info-item label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .info-item p {
+            color: var(--dark-color);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .items-list {
+            list-style: none;
+        }
+
+        .items-list li {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+
+        .item-extras {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+            padding-left: 10px;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+            white-space: nowrap;
+            margin-left: 15px;
+        }
+
+        .total-section {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: right;
+            margin: 30px 0;
+        }
+
+        .total-section h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .total-amount {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-delivery {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-pickup {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-paypal {
+            background: #fce7f3;
+            color: #831843;
+        }
+
+        .badge-cash {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-card {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .info-box h3 {
+            color: #856404;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            color: #856404;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .notes-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .notes-section label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .notes-section p {
+            color: #856404;
+            font-size: 15px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 80px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .order-id {
+                font-size: 22px;
+            }
+
+            .total-amount {
+                font-size: 28px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-receipt"></i>
+                Meine Bestellung
+            </h1>
+            <div class="order-status">
+                <i class="fas fa-check-circle"></i>
+                <span>Bestellung erfolgreich aufgegeben</span>
+            </div>
+        </div>
+
+        <div id="order-content">
+            <!-- Order details will be loaded here -->
+        </div>
+    </div>
+
+    <script src="menu-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrderDetails();
+        });
+
+        function loadOrderDetails() {
+            // Get the order ID from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId');
+
+            if (!orderId) {
+                showEmptyState('Keine Bestellnummer gefunden', 'Bitte kehren Sie zur Startseite zurück und versuchen Sie es erneut.');
+                return;
+            }
+
+            // Get all orders from localStorage
+            const orders = JSON.parse(localStorage.getItem('erfurtPizzaOrders') || '[]');
+
+            // Find the specific order
+            const order = orders.find(o => o.id === orderId);
+
+            if (!order) {
+                showEmptyState('Bestellung nicht gefunden', 'Die angeforderte Bestellung konnte nicht gefunden werden.');
+                return;
+            }
+
+            // Display the order
+            displayOrder(order);
+        }
+
+        function displayOrder(order) {
+            const date = new Date(order.timestamp);
+            const formattedDate = date.toLocaleDateString('de-DE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const deliveryBadge = order.deliveryMethod === 'delivery'
+                ? '<span class="badge badge-delivery"><i class="fas fa-truck"></i> Lieferung</span>'
+                : '<span class="badge badge-pickup"><i class="fas fa-box"></i> Abholung</span>';
+
+            const paymentBadges = {
+                'cash': '<span class="badge badge-cash"><i class="fas fa-money-bill-wave"></i> Barzahlung</span>',
+                'paypal': '<span class="badge badge-paypal"><i class="fab fa-paypal"></i> PayPal</span>',
+                'card': '<span class="badge badge-card"><i class="fas fa-credit-card"></i> Kreditkarte</span>'
+            };
+
+            const items = order.cart.map(item => {
+                const sizeText = item.size ? ` (${item.size})` : '';
+
+                // Calculate total including extras
+                const basePrice = item.price;
+                const extrasPrice = (item.extras || []).reduce((sum, extra) => sum + extra.price, 0);
+                const itemUnitPrice = basePrice + extrasPrice;
+                const itemTotal = itemUnitPrice * item.quantity;
+
+                // Build extras display
+                let extrasHTML = '';
+                if(item.extras && item.extras.length > 0) {
+                    extrasHTML = '<div class="item-extras">';
+                    item.extras.forEach(extra => {
+                        const extraPriceText = extra.price === 0 ? '' : ` (+${extra.price.toFixed(2)}€)`;
+                        extrasHTML += `<div>+ ${extra.name}${extraPriceText}</div>`;
+                    });
+                    extrasHTML += '</div>';
+                }
+
+                return `
+                    <li>
+                        <div class="item-details">
+                            <div class="item-name">${item.quantity}x ${item.name}${sizeText}</div>
+                            ${extrasHTML}
+                        </div>
+                        <div class="item-price">${itemTotal.toFixed(2)} €</div>
+                    </li>
+                `;
+            }).join('');
+
+            const content = `
+                <div class="order-id-section">
+                    <h2>Bestellnummer</h2>
+                    <div class="order-id">#${order.id}</div>
+                    <div class="order-time"><i class="fas fa-clock"></i> ${formattedDate}</div>
+                    <div class="badges">
+                        ${deliveryBadge}
+                        ${paymentBadges[order.paymentMethod] || ''}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3><i class="fas fa-user"></i> Ihre Informationen</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Name</label>
+                            <p>${order.name}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Telefon</label>
+                            <p>${order.phone}</p>
+                        </div>
+                        ${order.email ? `
+                        <div class="info-item">
+                            <label>E-Mail</label>
+                            <p>${order.email}</p>
+                        </div>
+                        ` : ''}
+                        ${order.deliveryMethod === 'delivery' ? `
+                        <div class="info-item">
+                            <label>Lieferadresse</label>
+                            <p>${order.street}<br>${order.zip} ${order.city}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                ${order.notes ? `
+                <div class="notes-section">
+                    <label><i class="fas fa-comment"></i> Ihre Anmerkungen:</label>
+                    <p>${order.notes}</p>
+                </div>
+                ` : ''}
+
+                <div class="section">
+                    <h3><i class="fas fa-pizza-slice"></i> Bestellte Artikel</h3>
+                    <ul class="items-list">
+                        ${items}
+                    </ul>
+                </div>
+
+                <div class="total-section">
+                    <h3>Gesamtbetrag</h3>
+                    <div class="total-amount">${order.total}</div>
+                </div>
+
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Was passiert als Nächstes?</h3>
+                    <p><strong>✓</strong> Sie haben eine Bestellbestätigung erhalten</p>
+                    <p><strong>✓</strong> Unsere Küche bereitet Ihre Bestellung zu</p>
+                    ${order.deliveryMethod === 'delivery'
+                        ? '<p><strong>✓</strong> Ihre Bestellung wird bald geliefert</p>'
+                        : '<p><strong>✓</strong> Sie können Ihre Bestellung bei uns abholen</p>'}
+                    <p><strong>✓</strong> Bei Fragen erreichen Sie uns unter: <strong>0361 65 44 22 75</strong></p>
+                </div>
+
+                <div class="actions">
+                    <a href="index.html" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Zurück zur Startseite
+                    </a>
+                    <button class="btn btn-success" onclick="window.print()">
+                        <i class="fas fa-print"></i> Bestellung drucken
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('order-content').innerHTML = content;
+        }
+
+        function showEmptyState(title, message) {
+            const content = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h2>${title}</h2>
+                    <p>${message}</p>
+                    <a href="index.html" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Zur Startseite
+                    </a>
+                </div>
+            `;
+
+            document.getElementById('order-content').innerHTML = content;
+        }
+    </script>
+</body>
+</html>
