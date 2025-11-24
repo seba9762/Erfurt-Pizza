@@ -99,15 +99,6 @@ menuFilters.forEach(filter => {
 
 // Load menu items function
 function loadMenuItems(filter) {
-    console.log('Loading menu items with filter:', filter);
-    console.log('Menu container:', menuItemsContainer);
-    console.log('window.menuData:', window.menuData ? window.menuData.length + ' items' : 'undefined');
-
-    if (!menuItemsContainer) {
-        console.error('Menu items container not found!');
-        return;
-    }
-
     menuItemsContainer.innerHTML = '';
 
     let filteredItems = window.menuData || [];
@@ -116,19 +107,10 @@ function loadMenuItems(filter) {
         filteredItems = (window.menuData || []).filter(item => item.tags.includes(filter));
     }
 
-    console.log('Filtered items:', filteredItems.length);
-
-    filteredItems.forEach((item, index) => {
-        try {
-            console.log(`Creating card for item ${index}:`, item.name);
-            const menuCard = createMenuCard(item);
-            menuItemsContainer.appendChild(menuCard);
-        } catch (error) {
-            console.error(`Error creating card for item ${index}:`, item.name, error);
-        }
+    filteredItems.forEach(item => {
+        const menuCard = createMenuCard(item);
+        menuItemsContainer.appendChild(menuCard);
     });
-
-    console.log('Menu items loaded successfully');
 }
 
 // Create menu card
