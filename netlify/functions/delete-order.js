@@ -1,4 +1,4 @@
-// Netlify Function: Update Order Status in Supabase
+// Netlify Function: Delete Order from Supabase
 const { getSupabaseClient } = require('./utils/supabase');
 const { getCorsHeaders, handleOptions } = require('./utils/cors');
 const { requireAuth } = require('./utils/auth');
@@ -9,8 +9,8 @@ exports.handler = async (event, context) => {
         return handleOptions(event);
     }
 
-    // Only allow POST/PUT requests
-    if (event.httpMethod !== 'POST' && event.httpMethod !== 'PUT') {
+    // Only allow DELETE requests
+    if (event.httpMethod !== 'DELETE' && event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
             headers: getCorsHeaders(event.headers.origin),
@@ -28,8 +28,17 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        // Parse request body
-        const { orderNumber, status, adminNotes, paymentStatus } = JSON.parse(event.body);
+        // Parse request body or query params
+        let orderNumber;
+
+        if (event.httpMethod === 'DELETE') {
+            // For DELETE, order number may be in query params
+            orderNumber = event.queryStringParameters?.orderNumber;
+        } else {
+            // For POST, order number in body
+            const body = JSON.parse(event.body || '{}');
+            orderNumber = body.orderNumber;
+        }
 
         // Validate required fields
         if (!orderNumber) {
@@ -46,44 +55,20 @@ exports.handler = async (event, context) => {
         // Initialize Supabase client
         const supabase = getSupabaseClient();
 
-        // Build update object
-        const updates = {};
-        if (status) updates.status = status;
-        if (adminNotes !== undefined) updates.admin_notes = adminNotes;
-        if (paymentStatus) updates.payment_status = paymentStatus;
-
-        // Add delivered timestamp if status is delivered
-        if (status === 'delivered') {
-            updates.delivered_at = new Date().toISOString();
-        }
-
-        // Update order
-        const { data: order, error } = await supabase
+        // Delete order (this will cascade delete order_items due to foreign key)
+        const { error } = await supabase
             .from('orders')
-            .update(updates)
-            .eq('order_number', orderNumber)
-            .select()
-            .single();
+            .delete()
+            .eq('order_number', orderNumber);
 
         if (error) {
-            console.error('Update order error:', error);
+            console.error('Delete order error:', error);
             return {
                 statusCode: 500,
                 headers: corsHeaders,
                 body: JSON.stringify({
                     success: false,
-                    error: 'Failed to update order: ' + error.message
-                })
-            };
-        }
-
-        if (!order) {
-            return {
-                statusCode: 404,
-                headers: corsHeaders,
-                body: JSON.stringify({
-                    success: false,
-                    error: 'Order not found'
+                    error: 'Failed to delete order: ' + error.message
                 })
             };
         }
@@ -94,12 +79,12 @@ exports.handler = async (event, context) => {
             headers: corsHeaders,
             body: JSON.stringify({
                 success: true,
-                order: order
+                message: 'Order deleted successfully'
             })
         };
 
     } catch (error) {
-        console.error('Update order error:', error);
+        console.error('Delete order error:', error);
         return {
             statusCode: 500,
             headers: corsHeaders,

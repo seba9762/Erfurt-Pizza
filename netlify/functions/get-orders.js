@@ -1,6 +1,7 @@
 // Netlify Function: Get Orders from Supabase
 const { getSupabaseClient } = require('./utils/supabase');
 const { getCorsHeaders, handleOptions } = require('./utils/cors');
+const { requireAuth } = require('./utils/auth');
 
 exports.handler = async (event, context) => {
     // Handle CORS preflight
@@ -15,6 +16,15 @@ exports.handler = async (event, context) => {
             headers: getCorsHeaders(event.headers.origin),
             body: JSON.stringify({ success: false, error: 'Method not allowed' })
         };
+    }
+
+    // Get CORS headers
+    const corsHeaders = getCorsHeaders(event.headers.origin);
+
+    // Require authentication
+    const authError = requireAuth(event, corsHeaders);
+    if (authError) {
+        return authError;
     }
 
     try {
@@ -76,7 +86,7 @@ exports.handler = async (event, context) => {
             console.error('Get orders error:', error);
             return {
                 statusCode: 500,
-                headers: getCorsHeaders(event.headers.origin),
+                headers: corsHeaders,
                 body: JSON.stringify({
                     success: false,
                     error: 'Failed to fetch orders: ' + error.message
@@ -87,7 +97,7 @@ exports.handler = async (event, context) => {
         // Return success response
         return {
             statusCode: 200,
-            headers: getCorsHeaders(event.headers.origin),
+            headers: corsHeaders,
             body: JSON.stringify({
                 success: true,
                 orders: orders || [],
@@ -99,7 +109,7 @@ exports.handler = async (event, context) => {
         console.error('Get orders error:', error);
         return {
             statusCode: 500,
-            headers: getCorsHeaders(event.headers.origin),
+            headers: corsHeaders,
             body: JSON.stringify({
                 success: false,
                 error: error.message || 'Internal server error'

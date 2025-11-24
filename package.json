@@ -1,0 +1,28 @@
+{
+  "name": "erfurt-pizza",
+  "version": "1.0.0",
+  "description": "Erfurt Pizza - Online ordering website with Supabase backend",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [
+    "pizza",
+    "restaurant",
+    "ordering",
+    "netlify",
+    "supabase"
+  ],
+  "author": "Erfurt Pizza",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "jsonwebtoken": "^9.0.2",
+    "stripe": "^14.10.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.10.1"
+  }
+}

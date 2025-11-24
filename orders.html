@@ -265,13 +265,12 @@
     </div>
 
     <script>
-        // IMPORTANT: Change this password hash after first login!
-        // To generate a new password hash, use the helper function at the bottom of this file
-        // Current password: "erfurt2024" (CHANGE THIS IMMEDIATELY!)
-        const ADMIN_PASSWORD_HASH = '8f6e0b9c5e4d3a2b1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6';
+        // Check if already authenticated (has valid token)
+        const token = sessionStorage.getItem('adminToken');
+        const tokenExpiry = sessionStorage.getItem('adminTokenExpiry');
 
-        // Check if already authenticated
-        if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+        if (token && tokenExpiry && new Date(tokenExpiry) > new Date()) {
+            // Token still valid, redirect to dashboard
             window.location.href = 'orders-dashboard.html';
         }
 
@@ -288,37 +287,65 @@
             togglePassword.classList.toggle('fa-eye-slash');
         });
 
-        // Simple hash function (SHA-256 equivalent for client-side)
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
-        }
-
-        // Handle login
+        // Handle login via backend authentication
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const password = passwordInput.value;
-            const hashedPassword = await hashPassword(password);
 
-            if (hashedPassword === ADMIN_PASSWORD_HASH) {
-                // Authentication successful
-                sessionStorage.setItem('adminAuthenticated', 'true');
-                sessionStorage.setItem('adminLoginTime', new Date().toISOString());
+            // Disable submit button during request
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authentifizierung...';
 
-                // Redirect to dashboard
-                window.location.href = 'orders-dashboard.html';
-            } else {
-                // Authentication failed
+            try {
+                // Call backend authentication function
+                const response = await fetch('/.netlify/functions/admin-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Authentication successful
+                    sessionStorage.setItem('adminToken', data.token);
+
+                    // Calculate expiry time (8 hours from now)
+                    const expiryTime = new Date();
+                    expiryTime.setSeconds(expiryTime.getSeconds() + data.expiresIn);
+                    sessionStorage.setItem('adminTokenExpiry', expiryTime.toISOString());
+
+                    // Redirect to dashboard
+                    window.location.href = 'orders-dashboard.html';
+                } else {
+                    // Authentication failed
+                    errorMessage.textContent = data.error || 'Falsches Passwort. Bitte versuchen Sie es erneut.';
+                    errorMessage.classList.add('show');
+                    passwordInput.value = '';
+                    passwordInput.focus();
+
+                    // Re-enable submit button
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Anmelden';
+
+                    // Hide error after 3 seconds
+                    setTimeout(() => {
+                        errorMessage.classList.remove('show');
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMessage.textContent = 'Verbindungsfehler. Bitte versuchen Sie es erneut.';
                 errorMessage.classList.add('show');
-                passwordInput.value = '';
-                passwordInput.focus();
 
-                // Hide error after 3 seconds
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Anmelden';
+
                 setTimeout(() => {
                     errorMessage.classList.remove('show');
                 }, 3000);
@@ -332,28 +359,15 @@
          * PASSWORD CHANGE HELPER
          * =====================
          * To change your password:
-         * 1. Open browser console (F12)
-         * 2. Run: generatePasswordHash("YourNewPassword")
-         * 3. Copy the hash that appears
-         * 4. Replace ADMIN_PASSWORD_HASH above with the new hash
-         * 5. Save this file
+         * 1. Generate a SHA-256 hash of your new password using an online tool:
+         *    https://emn178.github.io/online-tools/sha256.html
+         * 2. Add the hash to your Netlify environment variables as ADMIN_PASSWORD_HASH
+         * 3. Also set JWT_SECRET to a random string (32+ characters recommended)
+         *
+         * Example:
+         * ADMIN_PASSWORD_HASH=<your-sha256-hash>
+         * JWT_SECRET=<random-32-character-string>
          */
-        async function generatePasswordHash(newPassword) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(newPassword);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            console.log('='.repeat(60));
-            console.log('Your new password hash:');
-            console.log(hashHex);
-            console.log('='.repeat(60));
-            console.log('Replace ADMIN_PASSWORD_HASH in orders.html with this hash');
-            return hashHex;
-        }
-
-        // Make function globally available for console use
-        window.generatePasswordHash = generatePasswordHash;
     </script>
 </body>
 </html>

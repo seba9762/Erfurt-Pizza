@@ -501,28 +501,31 @@
     <script src="print-receipts.js"></script>
     <script>
         // ===== AUTHENTICATION CHECK =====
-        // Check if user is authenticated
-        if (sessionStorage.getItem('adminAuthenticated') !== 'true') {
-            // Redirect to login page
+        // Check if user has valid token
+        const adminToken = sessionStorage.getItem('adminToken');
+        const tokenExpiry = sessionStorage.getItem('adminTokenExpiry');
+
+        if (!adminToken || !tokenExpiry || new Date(tokenExpiry) <= new Date()) {
+            // No token or token expired, redirect to login
+            sessionStorage.removeItem('adminToken');
+            sessionStorage.removeItem('adminTokenExpiry');
             window.location.href = 'orders.html';
+        }
+
+        // Helper function to get auth headers
+        function getAuthHeaders() {
+            return {
+                'Authorization': `Bearer ${adminToken}`,
+                'Content-Type': 'application/json'
+            };
         }
 
         // Logout function
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
-                sessionStorage.removeItem('adminAuthenticated');
-                sessionStorage.removeItem('adminLoginTime');
+                sessionStorage.removeItem('adminToken');
+                sessionStorage.removeItem('adminTokenExpiry');
                 window.location.href = 'orders.html';
-            }
-        }
-
-        // Auto-logout after 8 hours of inactivity
-        const loginTime = sessionStorage.getItem('adminLoginTime');
-        if (loginTime) {
-            const hoursElapsed = (new Date() - new Date(loginTime)) / (1000 * 60 * 60);
-            if (hoursElapsed > 8) {
-                alert('Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.');
-                logout();
             }
         }
         // ===== END AUTHENTICATION CHECK =====
@@ -535,11 +538,73 @@
             loadOrders();
         });
 
-        function loadOrders() {
-            const savedOrders = localStorage.getItem('erfurtPizzaOrders');
-            orders = savedOrders ? JSON.parse(savedOrders) : [];
-            updateStatistics();
-            filterOrders();
+        // Load orders from Supabase via backend function
+        async function loadOrders() {
+            try {
+                // Show loading state
+                const container = document.getElementById('orders-container');
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <p>Lädt Bestellungen...</p>
+                    </div>
+                `;
+
+                // Fetch orders from backend
+                const response = await fetch('/.netlify/functions/get-orders', {
+                    method: 'GET',
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch orders');
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Transform Supabase data to match the expected format
+                    orders = data.orders.map(order => ({
+                        id: order.order_number,
+                        timestamp: order.created_at,
+                        name: order.customer_name,
+                        phone: order.customer_phone,
+                        email: order.customer_email,
+                        deliveryMethod: order.delivery_method,
+                        paymentMethod: order.payment_method,
+                        street: order.delivery_street,
+                        zip: order.delivery_zip,
+                        city: order.delivery_city,
+                        notes: order.customer_notes,
+                        total: order.total_amount.toFixed(2) + ' €',
+                        cart: order.order_items.map(item => ({
+                            name: item.item_name,
+                            size: item.item_size,
+                            quantity: item.quantity,
+                            price: item.unit_price,
+                            extras: item.extras || []
+                        }))
+                    }));
+
+                    updateStatistics();
+                    filterOrders();
+                } else {
+                    throw new Error(data.error || 'Failed to load orders');
+                }
+            } catch (error) {
+                console.error('Load orders error:', error);
+                const container = document.getElementById('orders-container');
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: #dc2626;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <h3>Fehler beim Laden der Bestellungen</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-primary" onclick="loadOrders()" style="margin-top: 20px;">
+                            <i class="fas fa-sync"></i> Erneut versuchen
+                        </button>
+                    </div>
+                `;
+            }
         }
 
         function updateStatistics() {
@@ -1160,18 +1225,34 @@
             alert('CSV-Datei wurde heruntergeladen! Sie können diese in Google Sheets importieren:\n\n1. Öffnen Sie Google Sheets\n2. Datei → Importieren\n3. Wählen Sie die CSV-Datei aus\n4. Klicken Sie auf "Daten importieren"');
         }
 
-        function deleteOrder(orderId) {
+        async function deleteOrder(orderId) {
             showConfirmModal(
                 'Möchten Sie diese Bestellung wirklich löschen?',
-                () => {
-                    orders = orders.filter(o => o.id !== orderId);
-                    localStorage.setItem('erfurtPizzaOrders', JSON.stringify(orders));
-                    loadOrders();
+                async () => {
+                    try {
+                        const response = await fetch('/.netlify/functions/delete-order', {
+                            method: 'POST',
+                            headers: getAuthHeaders(),
+                            body: JSON.stringify({ orderNumber: orderId })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            // Reload orders from database
+                            await loadOrders();
+                        } else {
+                            alert('Fehler beim Löschen: ' + (data.error || 'Unbekannter Fehler'));
+                        }
+                    } catch (error) {
+                        console.error('Delete order error:', error);
+                        alert('Fehler beim Löschen der Bestellung: ' + error.message);
+                    }
                 }
             );
         }
 
-        function clearAllOrders() {
+        async function clearAllOrders() {
             if (orders.length === 0) {
                 alert('Es sind keine Bestellungen vorhanden.');
                 return;
@@ -1179,10 +1260,25 @@
 
             showConfirmModal(
                 `Möchten Sie wirklich alle ${orders.length} Bestellungen löschen? Diese Aktion kann nicht rückgängig gemacht werden!`,
-                () => {
-                    localStorage.removeItem('erfurtPizzaOrders');
-                    orders = [];
-                    loadOrders();
+                async () => {
+                    try {
+                        // Delete all orders one by one
+                        const deletePromises = orders.map(order =>
+                            fetch('/.netlify/functions/delete-order', {
+                                method: 'POST',
+                                headers: getAuthHeaders(),
+                                body: JSON.stringify({ orderNumber: order.id })
+                            })
+                        );
+
+                        await Promise.all(deletePromises);
+
+                        // Reload orders from database
+                        await loadOrders();
+                    } catch (error) {
+                        console.error('Clear all orders error:', error);
+                        alert('Fehler beim Löschen aller Bestellungen: ' + error.message);
+                    }
                 }
             );
         }
