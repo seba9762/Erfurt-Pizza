@@ -8,8 +8,9 @@ const BACKEND_URL = '/.netlify/functions'; // Netlify Functions endpoint
 const paymentConfig = {
     // PayPal Configuration
     paypal: {
-        enabled: false, // Enable when you configure PayPal in Netlify environment variables
+        enabled: true, // Enable when you configure PayPal in Netlify environment variables
         mode: 'sandbox', // 'sandbox' for testing, 'live' for production (set via PAYPAL_MODE env var)
+        clientId: 'YOUR_PAYPAL_SANDBOX_CLIENT_ID', // Replace with your actual Sandbox Client ID
         // Note: Client ID is only used for frontend PayPal SDK, not for API calls
         // The actual credentials are stored securely in Netlify environment variables
         currency: 'EUR',
